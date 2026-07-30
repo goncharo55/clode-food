@@ -1,0 +1,22 @@
+node_modules/
+.next/
+out/
+build/
+dist/
+.env
+.env.local
+*.log
+apps/web/prisma/dev.db
+apps/web/prisma/dev.db-journal
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+
+# Prisma initが自動生成するAIツール向けリファレンス(内容は同じものが手元で再生成可能なため追跡しない)
+apps/web/.agents/
+apps/web/.claude/
+apps/web/.windsurf/
+apps/web/skills-lock.json

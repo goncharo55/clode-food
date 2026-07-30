@@ -1,0 +1,32 @@
+# スクレイパー定期実行の雛形（現時点では無効化）。
+#
+# 有効化する手順（docs/ops-notes.md参照）:
+#   1. リポジトリのSettings > Secrets and variables > Actions に
+#      ANTHROPIC_API_KEY, INGEST_SECRET, INGEST_API_URL を登録する
+#   2. 下の `on:` の `schedule` のコメントを外す
+#
+name: Scrape limited-time campaigns
+
+on:
+  workflow_dispatch: {}
+  # schedule:
+  #   - cron: "0 */12 * * *"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        working-directory: scraper
+        run: pip install -r requirements.txt
+      - name: Run scraper
+        working-directory: scraper
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          INGEST_SECRET: ${{ secrets.INGEST_SECRET }}
+          INGEST_API_URL: ${{ secrets.INGEST_API_URL }}
+        run: python main.py 5

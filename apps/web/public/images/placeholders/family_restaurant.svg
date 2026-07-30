@@ -1,0 +1,14 @@
+<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ファミリーレストラン">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8d7e4"/>
+      <stop offset="100%" stop-color="#e87ba4"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <circle cx="700" cy="60" r="130" fill="#ffffff" opacity="0.08"/>
+  <circle cx="60" cy="400" r="160" fill="#ffffff" opacity="0.08"/>
+  <text x="400" y="230" font-size="180" text-anchor="middle" dominant-baseline="central">🍽️</text>
+  <rect x="24" y="374" width="182" height="42" rx="21" fill="#000000" opacity="0.28"/>
+  <text x="40" y="400" font-size="19" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-weight="600" fill="#ffffff">ファミリーレストラン</text>
+</svg>
