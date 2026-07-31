@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Area" ADD COLUMN "lat" REAL;
-ALTER TABLE "Area" ADD COLUMN "lng" REAL;
