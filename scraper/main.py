@@ -1,5 +1,5 @@
 """
-スクレイパーのエントリポイント（現状はミスタードーナツ1チェーンのみ対応）。
+スクレイパーのエントリポイント（複数チェーン対応）。
 
 流れ: 新商品情報一覧を取得 → 候補ページを絞り込み → 各詳細ページを取得
       → Claudeで構造化抽出 → pending_reviewとして取り込みAPIへ送信
@@ -7,10 +7,11 @@
 実行方法:
     cd scraper
     pip install -r requirements.txt
+    playwright install chromium   # マクドナルド等JS描画サイトの取得に必要
     cp .env.example .env  # ANTHROPIC_API_KEY等を設定
-    python main.py [取得件数(デフォルト3)]
+    python main.py [取得件数(デフォルト3)] [チェーンslug(省略時は全チェーン)]
 
-事前にapps/web側で `npm run dev` を起動し、INGEST_SECRETを一致させておくこと。
+事前にapps/web側でアプリを起動し、INGEST_SECRETを一致させておくこと。
 """
 
 import sys
@@ -25,23 +26,32 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from extract.claude_extract import extract_campaign_fields
-from fetch.misterdonut import fetch_detail_text, fetch_new_product_links
+from fetch import mcdonalds, misterdonut, starbucks
 from load.ingest import submit_pending_campaign
 
-CHAIN_SLUG = "mister-donut"
+# 対応チェーン一覧。fetchモジュールは fetch_new_product_links / fetch_detail_text を実装すること
+CHAINS = {
+    "mister-donut": misterdonut,
+    "mcdonalds": mcdonalds,
+    "starbucks-japan": starbucks,
+}
 
 
-def run(limit: int = 3) -> None:
-    print(f"[fetch] {CHAIN_SLUG} の新商品情報一覧を取得中...")
-    items = fetch_new_product_links(limit=limit)
+def run_for_chain(chain_slug: str, module, limit: int) -> None:
+    print(f"[fetch] {chain_slug} の新商品情報一覧を取得中...")
+    try:
+        items = module.fetch_new_product_links(limit=limit)
+    except Exception as e:  # noqa: BLE001 - 1チェーンの失敗で全体を止めない
+        print(f"  一覧取得失敗、スキップ: {e}")
+        return
     print(f"[fetch] {len(items)}件の候補ページを検出")
 
     for item in items:
         url = item["url"]
         print(f"\n[fetch] 詳細ページ取得: {url}")
         try:
-            raw_text = fetch_detail_text(url)
-        except Exception as e:  # noqa: BLE001 - 1件の失敗で全体を止めない
+            raw_text = module.fetch_detail_text(url)
+        except Exception as e:  # noqa: BLE001
             print(f"  取得失敗、スキップ: {e}")
             continue
 
@@ -58,7 +68,7 @@ def run(limit: int = 3) -> None:
             continue
 
         payload = {
-            "chainSlug": CHAIN_SLUG,
+            "chainSlug": chain_slug,
             "title": extracted.get("title"),
             "description": extracted.get("description"),
             "startDate": extracted.get("start_date") or item.get("url_date"),
@@ -91,6 +101,17 @@ def run(limit: int = 3) -> None:
             print(f"  -> 既存データのためスキップ: id={result.get('id')}")
 
 
+def run(limit: int = 3, only_chain: str | None = None) -> None:
+    targets = {only_chain: CHAINS[only_chain]} if only_chain else CHAINS
+    for chain_slug, module in targets.items():
+        run_for_chain(chain_slug, module, limit)
+        print()
+
+
 if __name__ == "__main__":
     limit_arg = int(sys.argv[1]) if len(sys.argv) > 1 else 3
-    run(limit=limit_arg)
+    chain_arg = sys.argv[2] if len(sys.argv) > 2 else None
+    if chain_arg and chain_arg not in CHAINS:
+        print(f"未対応のチェーンです: {chain_arg} (対応: {', '.join(CHAINS)})")
+        sys.exit(1)
+    run(limit=limit_arg, only_chain=chain_arg)

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllChains, getChainBySlug, getCampaignsByChain, parseSort } from "@/lib/queries";
 import { chainEmoji } from "@/lib/chainVisuals";
+import { currentYearMonthJa } from "@/lib/dates";
 import CampaignCard from "@/components/CampaignCard";
 import SortTabs from "@/components/SortTabs";
 
@@ -21,9 +22,10 @@ export async function generateMetadata({
   const chain = await getChainBySlug(slug);
   if (!chain) return {};
 
+  const yearMonth = currentYearMonthJa();
   return {
-    title: `${chain.name}の期間限定メニュー・キャンペーン一覧`,
-    description: `${chain.name}で現在開催中・開催予定の期間限定メニューやキャンペーンをまとめて紹介。${
+    title: `${chain.name} 新作・期間限定メニューまとめ【${yearMonth}】`,
+    description: `${chain.name}の新作・期間限定メニューやキャンペーンを${yearMonth}最新版でまとめて紹介。${
       chain.description ?? ""
     }`,
   };

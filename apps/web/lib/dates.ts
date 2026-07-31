@@ -65,6 +65,11 @@ export function formatDateWithWeekdayJa(date: Date): string {
   }).format(date);
 }
 
+/** SEO用: 「2026年8月」のような年月表記。検索意図（例:「2026年8月 新商品」）に合わせるため */
+export function currentYearMonthJa(): string {
+  return new Intl.DateTimeFormat("ja-JP", { year: "numeric", month: "long" }).format(today());
+}
+
 export function dateKey(date: Date): string {
   const d = atMidnight(date);
   return d.toISOString().slice(0, 10);

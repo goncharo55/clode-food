@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import { getCurrentCampaigns, parseSort, type CampaignWithRelations } from "@/lib/queries";
-import { dateKey, formatDateWithWeekdayJa } from "@/lib/dates";
+import { dateKey, formatDateWithWeekdayJa, currentYearMonthJa } from "@/lib/dates";
 import CampaignCard from "@/components/CampaignCard";
 import SortTabs from "@/components/SortTabs";
 import EventGanttCalendar from "@/components/EventGanttCalendar";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: "期間限定イベントカレンダー",
-  description:
-    "飲食チェーンの期間限定メニュー・キャンペーンを開始日・終了間近・人気順・新着順で一覧チェック。",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const yearMonth = currentYearMonthJa();
+  return {
+    title: `期間限定イベントカレンダー【${yearMonth}最新】`,
+    description: `${yearMonth}時点の飲食チェーンの新作・期間限定メニュー・キャンペーンを開始日・終了間近・人気順・新着順で一覧チェック。`,
+  };
+}
 
 function groupByStartDate(campaigns: CampaignWithRelations[]) {
   const groups = new Map<string, CampaignWithRelations[]>();

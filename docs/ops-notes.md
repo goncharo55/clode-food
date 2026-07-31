@@ -21,12 +21,18 @@
 
 ## 3. スクレイパーの自動定期実行（GitHub Actions推奨）
 
-現状 `scraper/main.py` はローカルで手動実行する前提。定期実行するには:
+現状 `scraper/main.py` はローカルで手動実行する前提。対応チェーンはミスタードーナツ・
+マクドナルド・スターバックス（`scraper/main.py`の`CHAINS`辞書）。定期実行するには:
 
 1. `scraper/requirements.txt` の依存を使い、GitHub Actionsのランナー上でPythonを実行
-2. Secretsに `DATABASE_URL`（Supabase等、本番DB）と `ANTHROPIC_API_KEY` を登録
-   - 注意: これはClaude Code利用とは別に、スクレイパー用に単体のAnthropic APIキーを
-     https://console.anthropic.com で発行し、利用量に応じた課金が発生する
+   （マクドナルドの取得にPlaywright(ヘッドレスブラウザ)を使うため、
+   `playwright install --with-deps chromium` の実行も必要。ワークフローには反映済み）
+2. リポジトリのSecretsに以下を登録
+   - `ANTHROPIC_API_KEY`: スクレイパー用に単体で発行するAnthropic APIキー
+     （Claude Code利用とは別契約。https://console.anthropic.com で発行、利用量に応じ課金される）
+   - `INGEST_SECRET`: `apps/web/.env` の `INGEST_SECRET` と同じ値
+   - `INGEST_API_URL`: 本番サイトの `/api/ingest`（例: `https://clode-food.vercel.app/api/ingest`）
+   - （`DATABASE_URL`は不要。スクレイパーはDBに直接繋がず、常に`/api/ingest`経由で書き込む）
 3. `.github/workflows/scrape.yml` の雛形（本リポジトリに配置済み、`schedule:` はコメントアウト状態）
    のコメントを外して有効化
 4. 実行頻度は6〜12時間に1回程度を推奨（対象サイトへの負荷を抑えるため）
@@ -37,6 +43,11 @@
 - 各チェーンの `robots.txt` を確認し、許可されている範囲でのみ取得する
 - リクエスト間隔を空け、エラー時はリトライを控えて自動的にバックオフする
 - 画像は可能な範囲で公式サイトへのリンク・出典明記を優先し、大量の一括複製は避ける
+- 一覧ページがJavaScript描画のSPAの場合（マクドナルド等）はPlaywrightで、
+  静的HTMLの場合（ミスタードーナツ等）はrequests+BeautifulSoupで取得する。
+  スターバックスのように安定した一覧ページが見つからない場合、
+  「特定のURLへのアクセスで現在の目玉商品にリダイレクトされる」ような
+  サイト固有の挙動を探して代用する手もある（`scraper/fetch/starbucks.py`参照）
 
 ## 5. AdSense申請のタイミング
 

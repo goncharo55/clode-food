@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getEndingSoonCampaigns, getCurrentCampaigns, getAllChains } from "@/lib/queries";
 import CampaignCard from "@/components/CampaignCard";
@@ -5,8 +6,18 @@ import StationSearchForm from "@/components/StationSearchForm";
 import AdSlot from "@/components/AdSlot";
 import EventGanttCalendar from "@/components/EventGanttCalendar";
 import { chainEmoji } from "@/lib/chainVisuals";
+import { currentYearMonthJa } from "@/lib/dates";
+import { SITE_NAME } from "@/lib/site";
 
 export const revalidate = 1800;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const yearMonth = currentYearMonthJa();
+  return {
+    title: `${SITE_NAME}｜マック・スタバなど新作・期間限定メニューまとめ【${yearMonth}】`,
+    description: `${yearMonth}の飲食チェーン新作・期間限定メニュー・キャンペーンをまとめて検索。今日は何を食べよう？を30秒で見つけられます。`,
+  };
+}
 
 export default async function HomePage() {
   const [endingSoon, featured, chains] = await Promise.all([
