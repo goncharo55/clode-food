@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { today, isEndingSoon, formatPeriodJa } from "@/lib/dates";
+import { today, isEndingSoon, isNewlyStarted, isStartingSoon, formatPeriodJa } from "@/lib/dates";
 import { CATEGORY_VISUALS, categoryVisual, CATEGORY_ORDER } from "@/lib/categoryVisuals";
 import { chainEmoji } from "@/lib/chainVisuals";
 import type { CampaignWithRelations } from "@/lib/queries";
@@ -81,6 +81,10 @@ export default function EventGanttCalendar({
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-red-500" />
           終了間近（3日以内）
         </span>
+        <span className="inline-flex items-center gap-1.5 text-xs text-gray-600">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-sky-500" />
+          新着・まもなく開始（3日以内）
+        </span>
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
@@ -148,6 +152,7 @@ export default function EventGanttCalendar({
             const estimatedTextWidth = campaign.title.length * 12.5;
             const showInlineText = barPixelWidth >= 60 && estimatedTextWidth <= barPixelWidth - 8;
             const ending = isEndingSoon(campaign.endDate);
+            const isNew = isNewlyStarted(campaign.startDate) || isStartingSoon(campaign.startDate);
             const tooltip = `${campaign.chain.name}｜${campaign.title}（${formatPeriodJa(
               campaign.startDate,
               campaign.endDate,
@@ -182,6 +187,12 @@ export default function EventGanttCalendar({
                     }}
                   >
                     {showInlineText && <span className="truncate">{campaign.title}</span>}
+                    {isNew && (
+                      <span
+                        aria-hidden
+                        className="absolute left-0.5 top-0.5 h-1.5 w-1.5 rounded-full bg-sky-500 ring-1 ring-white"
+                      />
+                    )}
                     {ending && (
                       <span
                         aria-hidden

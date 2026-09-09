@@ -1,4 +1,11 @@
-import { daysUntilEnd, isEndingSoon, isStartingToday } from "@/lib/dates";
+import {
+  daysUntilEnd,
+  daysUntilStart,
+  isEndingSoon,
+  isNewlyStarted,
+  isStartingSoon,
+  isStartingToday,
+} from "@/lib/dates";
 
 export function CampaignBadges({
   startDate,
@@ -10,14 +17,21 @@ export function CampaignBadges({
   featured?: boolean;
 }) {
   const remaining = daysUntilEnd(endDate);
+  const untilStart = daysUntilStart(startDate);
   const endingSoon = isEndingSoon(endDate);
-  const startingToday = isStartingToday(startDate);
+  const startingSoon = isStartingSoon(startDate);
+  const newlyStarted = isNewlyStarted(startDate);
 
   return (
     <div className="flex flex-wrap gap-1.5">
-      {startingToday && (
+      {startingSoon && (
+        <span className="inline-flex items-center rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-semibold text-sky-700">
+          {untilStart === 1 ? "明日スタート" : `あと${untilStart}日でスタート`}
+        </span>
+      )}
+      {newlyStarted && (
         <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
-          本日スタート
+          {isStartingToday(startDate) ? "本日スタート" : "NEW"}
         </span>
       )}
       {endingSoon && remaining !== null && (

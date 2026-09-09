@@ -29,6 +29,22 @@ export function isStartingToday(startDate: Date): boolean {
   return daysSinceStart(startDate) === 0;
 }
 
+export function daysUntilStart(startDate: Date): number {
+  return -daysSinceStart(startDate);
+}
+
+/** まもなく開始（1〜3日後）かどうか */
+export function isStartingSoon(startDate: Date): boolean {
+  const days = daysUntilStart(startDate);
+  return days >= 1 && days <= 3;
+}
+
+/** 始まったばかり（本日〜3日前）かどうか */
+export function isNewlyStarted(startDate: Date): boolean {
+  const days = daysSinceStart(startDate);
+  return days >= 0 && days <= 3;
+}
+
 /** 終了間近（0〜3日後まで）かどうか。すでに終了している場合はfalse */
 export function isEndingSoon(endDate: Date | null): boolean {
   const days = daysUntilEnd(endDate);

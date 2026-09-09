@@ -1,16 +1,15 @@
-# スクレイパー定期実行の雛形（現時点では無効化）。
+# スクレイパーを12時間ごとに自動実行する。
 #
-# 有効化する手順（docs/ops-notes.md参照）:
-#   1. リポジトリのSettings > Secrets and variables > Actions に
-#      ANTHROPIC_API_KEY, INGEST_SECRET, INGEST_API_URL を登録する
-#   2. 下の `on:` の `schedule` のコメントを外す
+# 動作にはリポジトリのSettings > Secrets and variables > Actions に
+# ANTHROPIC_API_KEY, INGEST_SECRET, INGEST_API_URL の登録が必要（docs/ops-notes.md参照）。
+# 未登録の場合、実行はスキップされずに失敗するのでActionsタブで確認すること。
 #
 name: Scrape limited-time campaigns
 
 on:
   workflow_dispatch: {}
-  # schedule:
-  #   - cron: "0 */12 * * *"
+  schedule:
+    - cron: "0 */12 * * *"
 
 jobs:
   scrape:

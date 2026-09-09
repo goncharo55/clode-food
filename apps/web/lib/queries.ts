@@ -146,6 +146,24 @@ export async function getEndingSoonCampaigns(limit = 8) {
     .slice(0, limit);
 }
 
+/** 新着・まもなく開始（開始日が3日前〜3日後）のキャンペーン */
+export async function getNewOrUpcomingCampaigns(limit = 8) {
+  const start = new Date(today());
+  start.setDate(start.getDate() - 3);
+  const end = new Date(today());
+  end.setDate(end.getDate() + 3);
+
+  return prisma.campaign.findMany({
+    where: {
+      status: "published",
+      startDate: { gte: start, lte: end },
+    },
+    orderBy: { startDate: "asc" },
+    include: campaignListInclude,
+    take: limit,
+  });
+}
+
 export async function getStationSuggestions(limit = 30) {
   return prisma.stationAlias.findMany({
     orderBy: { stationName: "asc" },

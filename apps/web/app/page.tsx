@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getEndingSoonCampaigns, getCurrentCampaigns, getAllChains } from "@/lib/queries";
+import {
+  getEndingSoonCampaigns,
+  getNewOrUpcomingCampaigns,
+  getCurrentCampaigns,
+  getAllChains,
+} from "@/lib/queries";
 import CampaignCard from "@/components/CampaignCard";
 import StationSearchForm from "@/components/StationSearchForm";
 import AdSlot from "@/components/AdSlot";
@@ -20,8 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [endingSoon, featured, chains] = await Promise.all([
+  const [endingSoon, newOrUpcoming, featured, chains] = await Promise.all([
     getEndingSoonCampaigns(8),
+    getNewOrUpcomingCampaigns(8),
     getCurrentCampaigns("popular"),
     getAllChains(),
   ]);
@@ -55,6 +61,24 @@ export default async function HomePage() {
           ) : (
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {endingSoon.map((campaign) => (
+                <CampaignCard key={campaign.id} campaign={campaign} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="mt-10">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">🆕 新着・まもなく開始</h2>
+            <Link href="/calendar?sort=starting" className="text-sm text-orange-600 hover:underline">
+              すべて見る →
+            </Link>
+          </div>
+          {newOrUpcoming.length === 0 ? (
+            <p className="mt-4 text-gray-500">現在、新着・開始予定のキャンペーンはありません。</p>
+          ) : (
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {newOrUpcoming.map((campaign) => (
                 <CampaignCard key={campaign.id} campaign={campaign} />
               ))}
             </div>
