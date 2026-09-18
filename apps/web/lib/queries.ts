@@ -2,10 +2,22 @@ import { prisma } from "@/lib/prisma";
 import { today } from "@/lib/dates";
 import type { Prisma } from "@prisma/client";
 
-const CURRENT_OR_UPCOMING: Prisma.CampaignWhereInput = {
-  status: "published",
-  OR: [{ endDate: null }, { endDate: { gte: today() } }],
-};
+// 終了日未設定(なくなり次第終了)のキャンペーンは、いつまでも「開催中」として残り続けてしまう。
+// 開始からこの日数を超えたら一覧から外す（終了日が明記されているものは対象外、通常通りendDateで判定）
+const OPEN_ENDED_STALE_DAYS = 30;
+
+function currentOrUpcomingFilter(): Prisma.CampaignWhereInput {
+  const staleCutoff = new Date(today());
+  staleCutoff.setDate(staleCutoff.getDate() - OPEN_ENDED_STALE_DAYS);
+
+  return {
+    status: "published",
+    OR: [
+      { AND: [{ endDate: null }, { startDate: { gte: staleCutoff } }] },
+      { endDate: { gte: today() } },
+    ],
+  };
+}
 
 export type CampaignSort = "ending" | "starting" | "popular" | "new";
 
@@ -51,7 +63,7 @@ export type CampaignWithRelations = Prisma.CampaignGetPayload<{
 
 export async function getCurrentCampaigns(sort: CampaignSort = "ending") {
   const campaigns = await prisma.campaign.findMany({
-    where: CURRENT_OR_UPCOMING,
+    where: currentOrUpcomingFilter(),
     orderBy: orderByForSort(sort),
     include: campaignListInclude,
   });
@@ -68,7 +80,7 @@ export async function getAllChains() {
 
 export async function getCampaignsByChain(chainId: string, sort: CampaignSort = "ending") {
   const campaigns = await prisma.campaign.findMany({
-    where: { ...CURRENT_OR_UPCOMING, chainId },
+    where: { ...currentOrUpcomingFilter(), chainId },
     orderBy: orderByForSort(sort),
     include: campaignListInclude,
   });
@@ -121,7 +133,7 @@ export async function getCampaignsByArea(areaId: string, sort: CampaignSort = "e
   const campaigns = await prisma.campaign.findMany({
     where: {
       AND: [
-        CURRENT_OR_UPCOMING,
+        currentOrUpcomingFilter(),
         { OR: [{ areas: { none: {} } }, { areas: { some: { areaId } } }] },
       ],
     },

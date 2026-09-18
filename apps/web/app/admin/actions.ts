@@ -60,45 +60,73 @@ function readEditableFields(formData: FormData) {
   };
 }
 
-export async function approveAction(formData: FormData): Promise<void> {
+export type FormActionState = { error: string } | null;
+
+export async function approveAction(
+  _prevState: FormActionState,
+  formData: FormData,
+): Promise<FormActionState> {
   await requireAdmin();
   const fields = readEditableFields(formData);
 
-  await prisma.campaign.update({
-    where: { id: fields.id },
-    data: {
-      title: fields.title,
-      description: fields.description,
-      startDate: fields.startDate,
-      endDate: fields.endDate,
-      imageUrl: fields.imageUrl,
-      sourceUrl: fields.sourceUrl,
-      ...(fields.targetProducts !== undefined ? { targetProducts: fields.targetProducts as never } : {}),
-      status: "published",
-    },
-  });
+  if (!fields.id) {
+    return { error: "IDが不正です。ページを再読み込みしてください。" };
+  }
+  if (!fields.title || !fields.startDate) {
+    return { error: "タイトルと開始日は必須です。" };
+  }
+
+  try {
+    await prisma.campaign.update({
+      where: { id: fields.id },
+      data: {
+        title: fields.title,
+        description: fields.description,
+        startDate: fields.startDate,
+        endDate: fields.endDate,
+        imageUrl: fields.imageUrl,
+        sourceUrl: fields.sourceUrl,
+        ...(fields.targetProducts !== undefined ? { targetProducts: fields.targetProducts as never } : {}),
+        status: "published",
+      },
+    });
+  } catch (e) {
+    console.error("approveAction failed", e);
+    return { error: "承認に失敗しました。もう一度お試しください。" };
+  }
 
   revalidatePath("/", "layout");
   redirect("/admin");
 }
 
-export async function rejectAction(formData: FormData): Promise<void> {
+export async function rejectAction(
+  _prevState: FormActionState,
+  formData: FormData,
+): Promise<FormActionState> {
   await requireAdmin();
   const id = String(formData.get("id") ?? "");
+  if (!id) {
+    return { error: "IDが不正です。ページを再読み込みしてください。" };
+  }
 
-  const existing = await prisma.campaign.findUnique({ where: { id } });
-  const previousMetadata =
-    existing?.extractionMetadata && typeof existing.extractionMetadata === "object"
-      ? (existing.extractionMetadata as Record<string, unknown>)
-      : {};
+  try {
+    const existing = await prisma.campaign.findUnique({ where: { id } });
+    const previousMetadata =
+      existing?.extractionMetadata && typeof existing.extractionMetadata === "object"
+        ? (existing.extractionMetadata as Record<string, unknown>)
+        : {};
 
-  await prisma.campaign.update({
-    where: { id },
-    data: {
-      status: "archived",
-      extractionMetadata: { ...previousMetadata, rejectedAt: new Date().toISOString() },
-    },
-  });
+    await prisma.campaign.update({
+      where: { id },
+      data: {
+        status: "archived",
+        extractionMetadata: { ...previousMetadata, rejectedAt: new Date().toISOString() },
+      },
+    });
+  } catch (e) {
+    console.error("rejectAction failed", e);
+    return { error: "却下に失敗しました。もう一度お試しください。" };
+  }
 
   revalidatePath("/admin");
   redirect("/admin");

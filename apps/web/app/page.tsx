@@ -51,24 +51,6 @@ export default async function HomePage() {
       <div className="mx-auto max-w-5xl px-4 pb-16">
         <section>
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold">⏰ 終了間近（行き忘れ注意）</h2>
-            <Link href="/calendar?sort=ending" className="text-sm text-orange-600 hover:underline">
-              すべて見る →
-            </Link>
-          </div>
-          {endingSoon.length === 0 ? (
-            <p className="mt-4 text-gray-500">現在、終了間近のキャンペーンはありません。</p>
-          ) : (
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {endingSoon.map((campaign) => (
-                <CampaignCard key={campaign.id} campaign={campaign} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="mt-10">
-          <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">🆕 新着・まもなく開始</h2>
             <Link href="/calendar?sort=starting" className="text-sm text-orange-600 hover:underline">
               すべて見る →
@@ -79,6 +61,24 @@ export default async function HomePage() {
           ) : (
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {newOrUpcoming.map((campaign) => (
+                <CampaignCard key={campaign.id} campaign={campaign} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="mt-10">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">⏰ 終了間近（行き忘れ注意）</h2>
+            <Link href="/calendar?sort=ending" className="text-sm text-orange-600 hover:underline">
+              すべて見る →
+            </Link>
+          </div>
+          {endingSoon.length === 0 ? (
+            <p className="mt-4 text-gray-500">現在、終了間近のキャンペーンはありません。</p>
+          ) : (
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {endingSoon.map((campaign) => (
                 <CampaignCard key={campaign.id} campaign={campaign} />
               ))}
             </div>
