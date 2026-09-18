@@ -27,7 +27,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from extract.claude_extract import extract_campaign_fields
-from fetch import mcdonalds, misterdonut, starbucks
+from fetch import mcdonalds, misterdonut, starbucks, yoshinoya
 from load.ingest import submit_pending_campaign
 
 # 対応チェーン一覧。fetchモジュールは fetch_new_product_links / fetch_detail_text を実装すること
@@ -35,6 +35,7 @@ CHAINS = {
     "mister-donut": misterdonut,
     "mcdonalds": mcdonalds,
     "starbucks-japan": starbucks,
+    "yoshinoya": yoshinoya,
 }
 
 # Claudeが日付を特定できない際に "<UNKNOWN>" 等のプレースホルダーを返すことがあるため、

@@ -4,7 +4,7 @@ import type { Prisma } from "@prisma/client";
 
 // 終了日未設定(なくなり次第終了)のキャンペーンは、いつまでも「開催中」として残り続けてしまう。
 // 開始からこの日数を超えたら一覧から外す（終了日が明記されているものは対象外、通常通りendDateで判定）
-const OPEN_ENDED_STALE_DAYS = 30;
+const OPEN_ENDED_STALE_DAYS = 45;
 
 function currentOrUpcomingFilter(): Prisma.CampaignWhereInput {
   const staleCutoff = new Date(today());

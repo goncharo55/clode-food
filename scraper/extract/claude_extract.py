@@ -5,6 +5,7 @@
 """
 
 import os
+from datetime import date
 
 from anthropic import Anthropic
 
@@ -73,6 +74,7 @@ def extract_campaign_fields(
     prompt = f"""以下は飲食チェーンの新商品・キャンペーンページの本文テキストです。
 このページから期間限定メニュー・キャンペーン情報を抽出し、record_campaignツールで記録してください。
 
+- 本日の日付: {date.today().isoformat()}
 - 一覧ページでのタイトル候補: {list_title or "(不明)"}
 - URLから推定される公開日: {url_date or "(不明)"}
 - 出典URL: {source_url}
@@ -82,6 +84,8 @@ def extract_campaign_fields(
 {raw_text[:8000]}
 ---
 
+本文中の日付表記（例:「9月3日～9月24日」）に年が書かれていない場合、原則として「本日の日付」と同じ年、
+または本日以降の直近の該当月として解釈してください（過去の年を推測で使わないこと）。
 開始日が本文中に明記されていなければ、URLから推定される公開日を開始日として使ってください。
 終了日が「なくなり次第終了」「順次終了」など曖昧な場合はend_dateをnullにし、notesにその旨を書いてください。
 複数商品が掲載されている場合はtarget_productsに全て列挙してください。

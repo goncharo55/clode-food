@@ -21,8 +21,9 @@
 
 ## 3. スクレイパーの自動定期実行（GitHub Actions推奨）
 
-現状 `scraper/main.py` はローカルで手動実行する前提。対応チェーンはミスタードーナツ・
-マクドナルド・スターバックス（`scraper/main.py`の`CHAINS`辞書）。定期実行するには:
+現状 `scraper/main.py` はGitHub Actionsで12時間ごとに自動実行されている。対応チェーンは
+ミスタードーナツ・マクドナルド・スターバックス・吉野家（`scraper/main.py`の`CHAINS`辞書）。
+チェーンを追加する場合の手順:
 
 1. `scraper/requirements.txt` の依存を使い、GitHub Actionsのランナー上でPythonを実行
    （マクドナルドの取得にPlaywright(ヘッドレスブラウザ)を使うため、
