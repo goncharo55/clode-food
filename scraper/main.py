@@ -14,6 +14,7 @@
 事前にapps/web側でアプリを起動し、INGEST_SECRETを一致させておくこと。
 """
 
+import re
 import sys
 
 # Windows既定のコンソールエンコーディング(cp932)では日本語のprintでエラーになるため矯正する
@@ -35,6 +36,14 @@ CHAINS = {
     "mcdonalds": mcdonalds,
     "starbucks-japan": starbucks,
 }
+
+# Claudeが日付を特定できない際に "<UNKNOWN>" 等のプレースホルダーを返すことがあるため、
+# YYYY-MM-DD形式かどうかを検証してから送信する
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def valid_date_or_none(value: str | None) -> str | None:
+    return value if value and DATE_RE.match(value) else None
 
 
 def run_for_chain(chain_slug: str, module, limit: int) -> None:
@@ -67,12 +76,17 @@ def run_for_chain(chain_slug: str, module, limit: int) -> None:
             print(f"  抽出失敗、スキップ: {e}")
             continue
 
+        start_date = valid_date_or_none(extracted.get("start_date")) or valid_date_or_none(
+            item.get("url_date")
+        )
+        end_date = valid_date_or_none(extracted.get("end_date"))
+
         payload = {
             "chainSlug": chain_slug,
             "title": extracted.get("title"),
             "description": extracted.get("description"),
-            "startDate": extracted.get("start_date") or item.get("url_date"),
-            "endDate": extracted.get("end_date"),
+            "startDate": start_date,
+            "endDate": end_date,
             "targetProducts": extracted.get("target_products", []),
             "imageUrl": extracted.get("image_url"),
             "sourceUrl": url,
