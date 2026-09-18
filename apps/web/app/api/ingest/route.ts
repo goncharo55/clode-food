@@ -52,20 +52,33 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ id: existing.id, created: false });
   }
 
-  const campaign = await prisma.campaign.create({
-    data: {
-      chainId: chain.id,
-      title: payload.title,
-      description: payload.description,
-      startDate: new Date(payload.startDate),
-      endDate: payload.endDate ? new Date(payload.endDate) : null,
-      targetProducts: payload.targetProducts ?? [],
-      imageUrl: payload.imageUrl,
-      sourceUrl: payload.sourceUrl,
-      status: "pending_review",
-      extractionMetadata: payload.extractionMetadata as Prisma.InputJsonValue | undefined,
-    },
-  });
+  const startDate = new Date(payload.startDate);
+  if (Number.isNaN(startDate.getTime())) {
+    return NextResponse.json({ error: `invalid startDate: ${payload.startDate}` }, { status: 400 });
+  }
+  const endDate = payload.endDate ? new Date(payload.endDate) : null;
+  if (endDate && Number.isNaN(endDate.getTime())) {
+    return NextResponse.json({ error: `invalid endDate: ${payload.endDate}` }, { status: 400 });
+  }
 
-  return NextResponse.json({ id: campaign.id, created: true });
+  try {
+    const campaign = await prisma.campaign.create({
+      data: {
+        chainId: chain.id,
+        title: payload.title,
+        description: payload.description,
+        startDate,
+        endDate,
+        targetProducts: payload.targetProducts ?? [],
+        imageUrl: payload.imageUrl,
+        sourceUrl: payload.sourceUrl,
+        status: "pending_review",
+        extractionMetadata: payload.extractionMetadata as Prisma.InputJsonValue | undefined,
+      },
+    });
+    return NextResponse.json({ id: campaign.id, created: true });
+  } catch (e) {
+    console.error("ingest: failed to create campaign", e);
+    return NextResponse.json({ error: "failed to create campaign" }, { status: 500 });
+  }
 }

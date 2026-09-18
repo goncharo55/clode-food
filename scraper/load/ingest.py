@@ -17,5 +17,8 @@ def submit_pending_campaign(payload: dict) -> dict:
         headers={"x-ingest-secret": secret},
         timeout=15,
     )
-    response.raise_for_status()
+    if not response.ok:
+        raise RuntimeError(
+            f"ingest API returned {response.status_code}: {response.text[:500]}"
+        )
     return response.json()
