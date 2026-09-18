@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getCurrentCampaigns, parseSort, type CampaignWithRelations } from "@/lib/queries";
 import { dateKey, formatDateWithWeekdayJa, currentYearMonthJa } from "@/lib/dates";
 import CampaignCard from "@/components/CampaignCard";
@@ -36,7 +37,12 @@ export default async function CalendarPage({
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-2xl font-bold">期間限定イベントカレンダー</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">期間限定イベントカレンダー</h1>
+        <Link href="/calendar/history" className="text-sm text-orange-600 hover:underline">
+          過去のイベントを見る →
+        </Link>
+      </div>
       <p className="mt-2 text-gray-600">開催中・開催予定の期間限定メニュー・キャンペーンを一覧でチェック。</p>
 
       {campaigns.length > 0 && (

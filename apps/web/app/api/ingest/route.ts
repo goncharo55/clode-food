@@ -14,9 +14,22 @@ type IngestPayload = {
   extractionMetadata?: Record<string, unknown>;
 };
 
+// 抽出結果のconfidenceがこの値以上なら人手レビューを経ずに即公開する。
+// 未満、または不明な場合は従来通りpending_reviewとして管理画面での承認を待つ。
+const AUTO_PUBLISH_CONFIDENCE_THRESHOLD = 0.7;
+
+function resolveInitialStatus(extractionMetadata: Record<string, unknown> | undefined): "published" | "pending_review" {
+  const confidence = extractionMetadata?.confidence;
+  if (typeof confidence === "number" && confidence >= AUTO_PUBLISH_CONFIDENCE_THRESHOLD) {
+    return "published";
+  }
+  return "pending_review";
+}
+
 /**
  * スクレイパーからの取り込み専用エンドポイント。
- * 常に status="pending_review" で作成し、公開は管理画面での人手承認を経る。
+ * 抽出結果のconfidenceが高ければ即公開(published)、それ以外はpending_reviewとして
+ * 管理画面での人手承認を待つ。
  * 同じsourceUrlが既に存在する場合は重複作成せずスキップする。
  */
 export async function POST(request: NextRequest) {
@@ -72,7 +85,7 @@ export async function POST(request: NextRequest) {
         targetProducts: payload.targetProducts ?? [],
         imageUrl: payload.imageUrl,
         sourceUrl: payload.sourceUrl,
-        status: "pending_review",
+        status: resolveInitialStatus(payload.extractionMetadata),
         extractionMetadata: payload.extractionMetadata as Prisma.InputJsonValue | undefined,
       },
     });

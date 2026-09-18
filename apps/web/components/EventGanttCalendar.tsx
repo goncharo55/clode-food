@@ -46,13 +46,15 @@ export default function EventGanttCalendar({
   const todayColIndex = diffDays(base, rangeStart);
   const DAY_WIDTH = dayWidthFor(totalDays);
 
+  // 今日に近い（＝ユーザーが今関心を持ちやすい）イベントを上の行に表示する。
+  // 単純な開始日昇順だと、開始が古いまま長期間続いているイベントが上に固定されてしまうため。
   const rows = campaigns
     .filter((c) => {
       if (c.startDate > rangeEnd) return false;
       if (c.endDate && c.endDate < rangeStart) return false;
       return true;
     })
-    .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+    .sort((a, b) => Math.abs(diffDays(a.startDate, base)) - Math.abs(diffDays(b.startDate, base)));
 
   if (rows.length === 0) {
     return <p className="text-sm text-gray-500">この期間に表示できるイベントがありません。</p>;

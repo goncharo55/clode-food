@@ -52,6 +52,25 @@ function sortCampaignsForEnding<T extends { endDate: Date | null }>(campaigns: T
   });
 }
 
+// 開始日の新しさだけで並べると、開始が古いまま長期間続いているキャンペーンが
+// 上位を占め続けてしまう。「注目」フラグを優先しつつ、その中では今日に近い開始日を優先する。
+function sortCampaignsByRelevance<T extends { startDate: Date; featured: boolean }>(campaigns: T[]): T[] {
+  const now = today().getTime();
+  return [...campaigns].sort((a, b) => {
+    if (a.featured !== b.featured) return a.featured ? -1 : 1;
+    return Math.abs(a.startDate.getTime() - now) - Math.abs(b.startDate.getTime() - now);
+  });
+}
+
+function applyPostSort<T extends { endDate: Date | null; startDate: Date; featured: boolean }>(
+  campaigns: T[],
+  sort: CampaignSort,
+): T[] {
+  if (sort === "ending") return sortCampaignsForEnding(campaigns);
+  if (sort === "popular") return sortCampaignsByRelevance(campaigns);
+  return campaigns;
+}
+
 export const campaignListInclude = {
   chain: true,
   areas: { include: { area: true } },
@@ -67,7 +86,7 @@ export async function getCurrentCampaigns(sort: CampaignSort = "ending") {
     orderBy: orderByForSort(sort),
     include: campaignListInclude,
   });
-  return sort === "ending" ? sortCampaignsForEnding(campaigns) : campaigns;
+  return applyPostSort(campaigns, sort);
 }
 
 export async function getChainBySlug(slug: string) {
@@ -84,7 +103,7 @@ export async function getCampaignsByChain(chainId: string, sort: CampaignSort = 
     orderBy: orderByForSort(sort),
     include: campaignListInclude,
   });
-  return sort === "ending" ? sortCampaignsForEnding(campaigns) : campaigns;
+  return applyPostSort(campaigns, sort);
 }
 
 export async function getCampaignById(id: string) {
@@ -140,7 +159,7 @@ export async function getCampaignsByArea(areaId: string, sort: CampaignSort = "e
     orderBy: orderByForSort(sort),
     include: campaignListInclude,
   });
-  return sort === "ending" ? sortCampaignsForEnding(campaigns) : campaigns;
+  return applyPostSort(campaigns, sort);
 }
 
 export async function getEndingSoonCampaigns(limit = 8) {
@@ -173,6 +192,15 @@ export async function getNewOrUpcomingCampaigns(limit = 8) {
     orderBy: { startDate: "asc" },
     include: campaignListInclude,
     take: limit,
+  });
+}
+
+/** 過去アーカイブ用: 期間フィルタをかけず、公開済みキャンペーンを開始日が新しい順に全件返す */
+export async function getAllPublishedCampaigns() {
+  return prisma.campaign.findMany({
+    where: { status: "published" },
+    orderBy: { startDate: "desc" },
+    include: campaignListInclude,
   });
 }
 
