@@ -59,10 +59,10 @@ export async function POST(request: NextRequest) {
 
   const existing = await prisma.campaign.findFirst({
     where: { sourceUrl: payload.sourceUrl },
-    select: { id: true },
+    select: { id: true, status: true },
   });
   if (existing) {
-    return NextResponse.json({ id: existing.id, created: false });
+    return NextResponse.json({ id: existing.id, created: false, status: existing.status });
   }
 
   const startDate = new Date(payload.startDate);
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
         extractionMetadata: payload.extractionMetadata as Prisma.InputJsonValue | undefined,
       },
     });
-    return NextResponse.json({ id: campaign.id, created: true });
+    return NextResponse.json({ id: campaign.id, created: true, status: campaign.status });
   } catch (e) {
     console.error("ingest: failed to create campaign", e);
     return NextResponse.json({ error: "failed to create campaign" }, { status: 500 });

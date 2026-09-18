@@ -111,9 +111,9 @@ def run_for_chain(chain_slug: str, module, limit: int) -> None:
             continue
 
         if result.get("created"):
-            print(f"  -> 新規登録(pending_review): id={result.get('id')}")
+            print(f"  -> 新規登録({result.get('status', '?')}): id={result.get('id')}")
         else:
-            print(f"  -> 既存データのためスキップ: id={result.get('id')}")
+            print(f"  -> 既存データ({result.get('status', '?')})のためスキップ: id={result.get('id')}")
 
 
 def run(limit: int = 3, only_chain: str | None = None) -> None:
