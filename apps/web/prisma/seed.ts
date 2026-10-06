@@ -397,21 +397,21 @@ const campaignDefs: CampaignDef[] = [
 
 // lat/lngはNominatim(OpenStreetMap)で各駅名をジオコーディングして取得した実座標
 const areaDefs: { name: string; slug: string; region: string; stations: string[]; lat: number; lng: number }[] = [
-  { name: "渋谷", slug: "shibuya", region: "関東", stations: ["渋谷駅"], lat: 35.659939, lng: 139.6997378 },
-  { name: "新宿", slug: "shinjuku", region: "関東", stations: ["新宿駅"], lat: 35.6887259, lng: 139.6987623 },
-  { name: "池袋", slug: "ikebukuro", region: "関東", stations: ["池袋駅"], lat: 35.728554, lng: 139.7128585 },
-  { name: "東京", slug: "tokyo", region: "関東", stations: ["東京駅"], lat: 35.6827188, lng: 139.765815 },
-  { name: "品川", slug: "shinagawa", region: "関東", stations: ["品川駅"], lat: 35.6274838, lng: 139.7377655 },
-  { name: "横浜", slug: "yokohama", region: "関東", stations: ["横浜駅"], lat: 35.4660109, lng: 139.6226361 },
-  { name: "大宮", slug: "omiya", region: "関東", stations: ["大宮駅"], lat: 35.9063869, lng: 139.6243304 },
-  { name: "梅田", slug: "umeda", region: "関西", stations: ["梅田駅", "大阪駅"], lat: 34.7025087, lng: 135.4961773 },
-  { name: "難波", slug: "namba", region: "関西", stations: ["難波駅"], lat: 34.6636625, lng: 135.5017751 },
-  { name: "京都", slug: "kyoto", region: "関西", stations: ["京都駅"], lat: 34.9853497, lng: 135.758766 },
-  { name: "名古屋", slug: "nagoya", region: "東海", stations: ["名古屋駅"], lat: 35.1729, lng: 136.882 },
-  { name: "博多", slug: "hakata", region: "九州", stations: ["博多駅"], lat: 33.5900413, lng: 130.4199026 },
-  { name: "札幌", slug: "sapporo", region: "北海道", stations: ["札幌駅"], lat: 43.0686555, lng: 141.350787 },
-  { name: "仙台", slug: "sendai", region: "東北", stations: ["仙台駅"], lat: 38.2597526, lng: 140.8800249 },
-  { name: "広島", slug: "hiroshima", region: "中国", stations: ["広島駅"], lat: 34.3978256, lng: 132.4755766 },
+  { name: "渋谷", slug: "shibuya", region: "関東", stations: ["渋谷駅", "恵比寿駅", "中目黒駅", "代官山駅"], lat: 35.659939, lng: 139.6997378 },
+  { name: "新宿", slug: "shinjuku", region: "関東", stations: ["新宿駅", "新大久保駅", "代々木駅", "高田馬場駅", "甲府駅"], lat: 35.6887259, lng: 139.6987623 },
+  { name: "池袋", slug: "ikebukuro", region: "関東", stations: ["池袋駅", "大塚駅", "巣鴨駅", "目白駅"], lat: 35.728554, lng: 139.7128585 },
+  { name: "東京", slug: "tokyo", region: "関東", stations: ["東京駅", "日本橋駅", "有楽町駅", "丸の内駅", "大手町駅", "秋葉原駅"], lat: 35.6827188, lng: 139.765815 },
+  { name: "品川", slug: "shinagawa", region: "関東", stations: ["品川駅", "五反田駅", "大崎駅", "田町駅", "新橋駅"], lat: 35.6274838, lng: 139.7377655 },
+  { name: "横浜", slug: "yokohama", region: "関東", stations: ["横浜駅", "川崎駅", "関内駅", "桜木町駅", "みなとみらい駅"], lat: 35.4660109, lng: 139.6226361 },
+  { name: "大宮", slug: "omiya", region: "関東", stations: ["大宮駅", "浦和駅", "川越駅", "所沢駅", "柏駅", "千葉駅", "立川駅", "吉祥寺駅", "町田駅", "八王子駅", "宇都宮駅", "水戸駅", "新潟駅"], lat: 35.9063869, lng: 139.6243304 },
+  { name: "梅田", slug: "umeda", region: "関西", stations: ["梅田駅", "大阪駅", "天王寺駅", "京橋駅"], lat: 34.7025087, lng: 135.4961773 },
+  { name: "難波", slug: "namba", region: "関西", stations: ["難波駅", "心斎橋駅"], lat: 34.6636625, lng: 135.5017751 },
+  { name: "京都", slug: "kyoto", region: "関西", stations: ["京都駅", "河原町駅", "四条駅"], lat: 34.9853497, lng: 135.758766 },
+  { name: "名古屋", slug: "nagoya", region: "東海", stations: ["名古屋駅", "栄駅", "金山駅", "静岡駅", "浜松駅", "金沢駅", "松本駅"], lat: 35.1729, lng: 136.882 },
+  { name: "博多", slug: "hakata", region: "九州", stations: ["博多駅", "天神駅", "小倉駅", "熊本駅", "鹿児島駅", "那覇駅"], lat: 33.5900413, lng: 130.4199026 },
+  { name: "札幌", slug: "sapporo", region: "北海道", stations: ["札幌駅", "すすきの駅"], lat: 43.0686555, lng: 141.350787 },
+  { name: "仙台", slug: "sendai", region: "東北", stations: ["仙台駅", "長町駅"], lat: 38.2597526, lng: 140.8800249 },
+  { name: "広島", slug: "hiroshima", region: "中国", stations: ["広島駅", "横川駅", "岡山駅", "高松駅", "松山駅"], lat: 34.3978256, lng: 132.4755766 },
 ];
 
 async function main() {

@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getCampaignById } from "@/lib/queries";
+import { getCampaignById, getCampaignsByChain } from "@/lib/queries";
 import { chainEmoji } from "@/lib/chainVisuals";
 import { CampaignBadges } from "@/components/CampaignBadges";
+import CampaignCard from "@/components/CampaignCard";
 import { formatPeriodJa } from "@/lib/dates";
 import { campaignLinkUrl } from "@/lib/campaignLink";
 import { SITE_URL } from "@/lib/site";
@@ -57,6 +58,10 @@ export default async function CampaignDetailPage({
     : [];
   const officialLinkUrl = campaignLinkUrl(campaign, campaign.chain);
   const hasSpecificSourceUrl = Boolean(campaign.sourceUrl?.trim());
+
+  const sameChainCampaigns = (await getCampaignsByChain(campaign.chainId))
+    .filter((c) => c.id !== campaign.id)
+    .slice(0, 4);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -171,6 +176,25 @@ export default async function CampaignDetailPage({
 
       {campaign.description && (
         <p className="mt-6 leading-relaxed text-gray-700">{campaign.description}</p>
+      )}
+
+      {sameChainCampaigns.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-lg font-bold">
+            {chainEmoji(campaign.chain.slug)} {campaign.chain.name}の他の期間限定
+          </h2>
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {sameChainCampaigns.map((c) => (
+              <CampaignCard key={c.id} campaign={c} />
+            ))}
+          </div>
+          <Link
+            href={`/chains/${campaign.chain.slug}`}
+            className="mt-4 inline-block text-sm text-orange-600 hover:underline"
+          >
+            {campaign.chain.name}の期間限定を全て見る →
+          </Link>
+        </section>
       )}
     </div>
   );
