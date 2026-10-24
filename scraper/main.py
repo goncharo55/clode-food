@@ -94,6 +94,10 @@ def run_for_chain(chain_slug: str, module, limit: int) -> None:
             print(f"  抽出失敗、スキップ: {e}")
             continue
 
+        if not extracted.get("is_relevant", True):
+            print("  期間限定メニュー・キャンペーンではないと判定されたためスキップ")
+            continue
+
         start_date = valid_date_or_none(extracted.get("start_date")) or valid_date_or_none(
             item.get("url_date")
         )

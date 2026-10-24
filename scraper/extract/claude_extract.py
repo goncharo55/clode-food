@@ -30,6 +30,15 @@ EXTRACTION_TOOL = {
     "input_schema": {
         "type": "object",
         "properties": {
+            "is_relevant": {
+                "type": "boolean",
+                "description": (
+                    "本文が「期間限定メニュー・新商品・販促キャンペーン」であればtrue。"
+                    "新店舗オープン情報、人事・採用、決算・IR、おわび・システム障害、"
+                    "会社沿革等、食品の期間限定情報ではない内容ならfalse。"
+                    "falseの場合、他のフィールドは分かる範囲で構わない（空でもよい）。"
+                ),
+            },
             "title": {"type": "string", "description": "キャンペーン・商品名"},
             "description": {"type": "string", "description": "1〜2文程度の説明"},
             "start_date": {
@@ -58,7 +67,7 @@ EXTRACTION_TOOL = {
                 "description": "終了日が「なくなり次第終了」等で曖昧、店舗限定の可能性がある等、レビュー時に人が確認すべき注意点",
             },
         },
-        "required": ["title", "start_date", "target_products", "confidence"],
+        "required": ["is_relevant", "title", "start_date", "target_products", "confidence"],
     },
 }
 
@@ -71,8 +80,12 @@ def extract_campaign_fields(
 ) -> dict:
     client = _get_client()
 
-    prompt = f"""以下は飲食チェーンの新商品・キャンペーンページの本文テキストです。
+    prompt = f"""以下は飲食チェーンの新着情報一覧から取得した1ページの本文テキストです。
 このページから期間限定メニュー・キャンペーン情報を抽出し、record_campaignツールで記録してください。
+
+このページは新店舗オープン情報や人事・決算・システム障害のお詫びなど、
+期間限定メニューと無関係なニュースである可能性があります。その場合は
+is_relevantをfalseにしてください（他のフィールドは無理に埋めなくて構いません）。
 
 - 本日の日付: {date.today().isoformat()}
 - 一覧ページでのタイトル候補: {list_title or "(不明)"}
