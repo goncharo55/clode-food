@@ -34,8 +34,8 @@ http://localhost:3000 でアクセスできます。
 ## 現状のスコープ
 
 MVP: チェーン検索、イベントカレンダー、エリア/駅検索、イベント詳細、終了間近ウィジェット、
-簡易管理画面（承認フロー）、3チェーン（ミスタードーナツ・マクドナルド・スターバックス）分の
-スクレイパー動作確認まで。
+簡易管理画面（承認フロー）、24チェーン中10チェーン分のスクレイパーをGitHub Actionsで
+自動定期実行中（詳細は[docs/ops-notes.md](docs/ops-notes.md)参照）。
 
 自動定期実行（GitHub Actions等）や本番DB（Supabase/Neon等）への切替、
 お気に入り・通知・Google Map・AIおすすめ等は将来対応（[ops-notes.md](docs/ops-notes.md)参照）。
