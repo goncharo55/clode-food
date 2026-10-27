@@ -27,6 +27,30 @@ function resolveInitialStatus(extractionMetadata: Record<string, unknown> | unde
 }
 
 /**
+ * 指定したsourceUrlが既に取り込み済みかどうかを確認する。
+ * スクレイパー側で「詳細ページ取得→Claude抽出」という課金が発生する処理に進む前に、
+ * 既存データかどうかをここで安価に確認してスキップできるようにするためのエンドポイント。
+ */
+export async function GET(request: NextRequest) {
+  const secret = request.headers.get("x-ingest-secret");
+  if (!process.env.INGEST_SECRET || secret !== process.env.INGEST_SECRET) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  const sourceUrl = request.nextUrl.searchParams.get("sourceUrl");
+  if (!sourceUrl) {
+    return NextResponse.json({ error: "sourceUrl is required" }, { status: 400 });
+  }
+
+  const existing = await prisma.campaign.findFirst({
+    where: { sourceUrl },
+    select: { id: true, status: true },
+  });
+
+  return NextResponse.json({ exists: Boolean(existing), id: existing?.id, status: existing?.status });
+}
+
+/**
  * スクレイパーからの取り込み専用エンドポイント。
  * 抽出結果のconfidenceが高ければ即公開(published)、それ以外はpending_reviewとして
  * 管理画面での人手承認を待つ。

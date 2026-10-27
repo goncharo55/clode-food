@@ -39,7 +39,7 @@ from fetch import (
     sushiro,
     yoshinoya,
 )
-from load.ingest import submit_pending_campaign
+from load.ingest import check_exists, submit_pending_campaign
 
 # 対応チェーン一覧。fetchモジュールは fetch_new_product_links / fetch_detail_text を実装すること
 CHAINS = {
@@ -75,7 +75,15 @@ def run_for_chain(chain_slug: str, module, limit: int) -> None:
 
     for item in items:
         url = item["url"]
-        print(f"\n[fetch] 詳細ページ取得: {url}")
+        print(f"\n[check] 既存データ確認: {url}")
+        try:
+            if check_exists(url):
+                print("  既に取り込み済みのためスキップ(Claude抽出は呼び出さない)")
+                continue
+        except Exception as e:  # noqa: BLE001 - 確認に失敗しても通常どおり処理を続ける
+            print(f"  既存確認に失敗、通常どおり処理を続行: {e}")
+
+        print(f"[fetch] 詳細ページ取得: {url}")
         try:
             raw_text = module.fetch_detail_text(url)
         except Exception as e:  # noqa: BLE001
