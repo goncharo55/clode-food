@@ -33,36 +33,36 @@ type ChainDef = {
 };
 
 const chainDefs: ChainDef[] = [
-  { name: "マクドナルド", slug: "mcdonalds", category: "burger_fastfood", officialSiteUrl: "https://www.mcdonalds.co.jp/", description: "世界最大のハンバーガーチェーン。期間限定バーガーが豊富。" },
-  { name: "ロッテリア", slug: "lotteria", category: "burger_fastfood", officialSiteUrl: "https://www.lotteria.jp/", description: "国内発のハンバーガーチェーン。エビバーガー系が人気。" },
-  { name: "ケンタッキーフライドチキン", slug: "kfc-japan", category: "burger_fastfood", officialSiteUrl: "https://www.kfc.co.jp/", description: "フライドチキンチェーン。季節限定メニューを多数展開。" },
+  { name: "マクドナルド", slug: "mcdonalds", category: "burger_fastfood", officialSiteUrl: "https://www.mcdonalds.co.jp/", description: "1971年7月、銀座三越内に日本1号店が開業した世界最大のハンバーガーチェーン。「てりやきバーガー」をはじめ日本市場向けに独自開発されたメニューで知られ、夏の「月見バーガー」など季節ごとの期間限定商品や人気キャラクターとのコラボレーションを頻繁に展開している。モーニング・ランチ・ディナーと時間帯別のメニューも充実。" },
+  { name: "ロッテリア", slug: "lotteria", category: "burger_fastfood", officialSiteUrl: "https://www.lotteria.jp/", description: "1972年創業の国産ハンバーガーチェーン。濃厚なエビカツを使う「エビバーガー」シリーズや、厚切りパティの「絶品チーズバーガー」シリーズが看板商品。運営会社では2026年に社名変更が発表されており、今後ブランド名が変わる可能性もある。" },
+  { name: "ケンタッキーフライドチキン", slug: "kfc-japan", category: "burger_fastfood", officialSiteUrl: "https://www.kfc.co.jp/", description: "1970年11月、名古屋に日本1号店が開業したフライドチキン専門チェーン。1970年代から「クリスマスはケンタッキー」という文化が広まり、年末のフライドチキン需要を日本に定着させたことで知られる。骨付きチキンのほか、チキンフィレを使ったバーガー類も人気。" },
 
-  { name: "コメダ珈琲店", slug: "komeda", category: "cafe_donut", officialSiteUrl: "https://www.komeda.co.jp/", description: "名古屋発の喫茶店チェーン。シロノワールなど季節限定メニューが人気。" },
-  { name: "ミスタードーナツ", slug: "mister-donut", category: "cafe_donut", officialSiteUrl: "https://www.misterdonut.jp/", description: "ドーナツチェーン。季節のフレーバーやコラボ商品を頻繁に展開。" },
-  { name: "ドトールコーヒー", slug: "doutor", category: "cafe_donut", officialSiteUrl: "https://www.doutor.co.jp/", description: "老舗コーヒーチェーン。低価格帯で季節ドリンクを展開。" },
-  { name: "タリーズコーヒー", slug: "tullys", category: "cafe_donut", officialSiteUrl: "https://www.tullys.co.jp/", description: "シアトル発祥のコーヒーチェーン日本法人。" },
-  { name: "スターバックス", slug: "starbucks-japan", category: "cafe_donut", officialSiteUrl: "https://www.starbucks.co.jp/", description: "季節限定フラペチーノで知られるコーヒーチェーン。" },
+  { name: "コメダ珈琲店", slug: "komeda", category: "cafe_donut", officialSiteUrl: "https://www.komeda.co.jp/", description: "1968年、名古屋で創業した喫茶店チェーン。厚切りトーストやゆで卵が無料で付く「モーニングサービス」と、デニッシュパンにソフトクリームをのせた「シロノワール」が看板メニュー。ゆったりくつろげる椅子・座席づくりにもこだわっている。" },
+  { name: "ミスタードーナツ", slug: "mister-donut", category: "cafe_donut", officialSiteUrl: "https://www.misterdonut.jp/", description: "1971年4月、大阪・箕面に日本1号店が開業したドーナツチェーン。もちもち食感の「ポン・デ・リング」が看板商品で、定番ドーナツに加えて季節のフレーバーや人気キャラクターとのコラボドーナツを頻繁に発売している。" },
+  { name: "ドトールコーヒー", slug: "doutor", category: "cafe_donut", officialSiteUrl: "https://www.doutor.co.jp/", description: "1962年にコーヒー豆の焙煎卸として創業し、1980年に原宿で日本初のセルフ式コーヒーショップをオープン。低価格・スピーディーなセルフ式カフェの先駆けとして知られ、「ミラノサンド」シリーズと厳選豆のコーヒーが看板商品。" },
+  { name: "タリーズコーヒー", slug: "tullys", category: "cafe_donut", officialSiteUrl: "https://www.tullys.co.jp/", description: "シアトル発のコーヒーチェーンの日本法人として、1997年8月に銀座で1号店が開業。季節限定のドリンクやコラボメニューを頻繁に展開しており、本格的なエスプレッソドリンクの文化を日本に広めた一社として知られる。" },
+  { name: "スターバックス", slug: "starbucks-japan", category: "cafe_donut", officialSiteUrl: "https://www.starbucks.co.jp/", description: "1996年8月、銀座松屋通り店で日本1号店が開業したシアトル発のコーヒーチェーン。季節ごとに発表される限定フラペチーノは発売のたびに話題となり、SNSでも頻繁にシェアされる人気コンテンツとなっている。" },
 
-  { name: "スシロー", slug: "sushiro", category: "sushi", officialSiteUrl: "https://www.akindo-sushiro.co.jp/", description: "回転寿司チェーン。地域フェアや期間限定ネタを多数展開。" },
-  { name: "かっぱ寿司", slug: "kappa-sushi", category: "sushi", officialSiteUrl: "https://www.kappasushi.jp/", description: "回転寿司チェーン。コラボキャンペーンなどが人気。" },
+  { name: "スシロー", slug: "sushiro", category: "sushi", officialSiteUrl: "https://www.akindo-sushiro.co.jp/", description: "大阪・阿倍野で始まった鯛すし店をルーツに持つ回転寿司チェーンで、国内店舗数最大級を誇る。北海道フェアなど地域の魚介を使った期間限定フェアや、人気アニメ・キャラクターとのコラボ企画を頻繁に実施し、ファミリー層から幅広く支持されている。" },
+  { name: "かっぱ寿司", slug: "kappa-sushi", category: "sushi", officialSiteUrl: "https://www.kappasushi.jp/", description: "1979年に1号店が開業した回転寿司チェーン。食べ放題フェアや人気IPとのコラボキャンペーンに積極的で、カプセルトイなどのノベルティ企画も多い。比較的リーズナブルな価格帯で、ファミリー利用が多いのも特徴。" },
 
-  { name: "吉野家", slug: "yoshinoya", category: "gyudon_teishoku", officialSiteUrl: "https://www.yoshinoya.com/", description: "牛丼チェーンの最大手。季節限定丼を多数展開。" },
-  { name: "すき家", slug: "sukiya", category: "gyudon_teishoku", officialSiteUrl: "https://www.sukiya.jp/", description: "牛丼チェーン。トッピングフェアが豊富。" },
-  { name: "松屋", slug: "matsuya", category: "gyudon_teishoku", officialSiteUrl: "https://www.matsuyafoods.co.jp/matsuya/", description: "牛めし・定食チェーン。" },
-  { name: "大戸屋", slug: "ootoya", category: "gyudon_teishoku", officialSiteUrl: "https://www.ootoya.com/", description: "定食チェーン。季節の定食フェアを展開。" },
-  { name: "やよい軒", slug: "yayoiken", category: "gyudon_teishoku", officialSiteUrl: "https://www.yayoiken.com/", description: "定食チェーン。ご飯・味噌汁おかわり自由が特徴。" },
+  { name: "吉野家", slug: "yoshinoya", category: "gyudon_teishoku", officialSiteUrl: "https://www.yoshinoya.com/", description: "1899年、東京・日本橋の魚市場で創業した牛丼チェーンの最古参かつ最大手の一社。秘伝のたれで煮込む牛丼が看板商品で、季節の食材を使った限定丼や、うなぎ・海鮮と組み合わせたメニューも定期的に展開している。" },
+  { name: "すき家", slug: "sukiya", category: "gyudon_teishoku", officialSiteUrl: "https://www.sukiya.jp/", description: "1982年、横浜で創業した牛丼チェーン。ゼンショーホールディングス傘下で、国内店舗数は牛丼業界トップクラス。定番の牛丼に加え、カレーや甘辛い牛とじ丼など多彩なトッピング・フェアを頻繁に展開し、メニューの幅広さに定評がある。" },
+  { name: "松屋", slug: "matsuya", category: "gyudon_teishoku", officialSiteUrl: "https://www.matsuyafoods.co.jp/matsuya/", description: "1966年創業、1968年に牛めし1号店を江古田にオープンした牛めしチェーン。注文時に食券を購入するスタイルを早くから導入したことで知られる。定番の牛めしに加え定食メニューも充実しており、季節替わりの肉料理や変わり種トッピングの限定メニューも頻繁に登場する。" },
+  { name: "大戸屋", slug: "ootoya", category: "gyudon_teishoku", officialSiteUrl: "https://www.ootoya.com/", description: "1958年、池袋で創業した定食チェーン。「家庭的な美味しさ」をコンセプトに、注文を受けてから一品ずつ調理する手作りスタイルが特徴。焼き魚や煮物など和食中心のメニューに加え、季節の食材を使った限定定食も定期的に展開している。" },
+  { name: "やよい軒", slug: "yayoiken", category: "gyudon_teishoku", officialSiteUrl: "https://www.yayoiken.com/", description: "2004年、東京・四谷に1号店が開業した定食チェーン。プレナスが展開しており、ご飯・味噌汁・漬物のおかわりが自由な「おかわり自由」サービスが看板。生姜焼きや鶏料理など定番おかずに加え、季節限定の定食メニューを頻繁に入れ替えている。" },
 
-  { name: "ロイヤルホスト", slug: "royal-host", category: "family_restaurant", officialSiteUrl: "https://www.royalhost.jp/", description: "上質さで知られるファミリーレストランチェーン。" },
-  { name: "サイゼリヤ", slug: "saizeriya", category: "family_restaurant", officialSiteUrl: "https://www.saizeriya.co.jp/", description: "低価格イタリアンファミリーレストラン。" },
-  { name: "ガスト", slug: "gusto", category: "family_restaurant", officialSiteUrl: "https://www.skylark.co.jp/gusto/", description: "すかいらーくグループのファミリーレストラン。" },
-  { name: "ジョナサン", slug: "jonathans", category: "family_restaurant", officialSiteUrl: "https://www.skylark.co.jp/jonathan/", description: "すかいらーくグループのファミリーレストラン。" },
-  { name: "デニーズ", slug: "dennys", category: "family_restaurant", officialSiteUrl: "https://www.dennys.jp/", description: "24時間営業でおなじみのファミリーレストラン。" },
+  { name: "ロイヤルホスト", slug: "royal-host", category: "family_restaurant", officialSiteUrl: "https://www.royalhost.jp/", description: "源流は1950年創業、1971年に北九州で1号店が開業した「上質さ」を打ち出すファミリーレストランの老舗。シェフが腕を振るう本格的な洋食メニューと落ち着いた店内が特徴で、季節のフルーツを使ったデザートなど期間限定メニューのクオリティにも定評がある。" },
+  { name: "サイゼリヤ", slug: "saizeriya", category: "family_restaurant", officialSiteUrl: "https://www.saizeriya.co.jp/", description: "1960年代後半に千葉県市川市で創業した低価格イタリアンファミリーレストラン。ワンコインで楽しめるパスタ・ピザ・ドリンクバーのコストパフォーマンスの高さで知られ、季節替わりのデザートやスープなど小規模な入れ替えメニューも頻繁に展開している。" },
+  { name: "ガスト", slug: "gusto", category: "family_restaurant", officialSiteUrl: "https://www.skylark.co.jp/gusto/", description: "すかいらーくグループ最大のファミリーレストランブランドで、幅広いジャンルのメニューを展開。ハンバーグなど洋食からパスタ、和食メニューまで揃い、アプリ限定クーポンを活用した期間限定キャンペーンを積極的に行っている。" },
+  { name: "ジョナサン", slug: "jonathans", category: "family_restaurant", officialSiteUrl: "https://www.skylark.co.jp/jonathan/", description: "すかいらーくグループのファミリーレストランで、落ち着いた雰囲気と幅広いメニュー構成が特徴。深夜営業に対応する店舗も多く、ドリンクバーや軽食を楽しめる利用シーンの広さが支持されている。" },
+  { name: "デニーズ", slug: "dennys", category: "family_restaurant", officialSiteUrl: "https://www.dennys.jp/", description: "1973年、伊藤忠商事系の企業が米デニーズ本部とライセンス契約を結び日本法人を設立したことに始まる、24時間営業でおなじみのファミリーレストランチェーン。ハンバーグやパンケーキなど定番の洋食メニューに加え、季節のフルーツを使ったパフェ・デザート系の期間限定メニューが人気。" },
 
-  { name: "一蘭", slug: "ichiran", category: "ramen_noodle", officialSiteUrl: "https://www.ichiran.com/", description: "とんこつラーメン専門店。" },
-  { name: "丸亀製麺", slug: "marugame-seimen", category: "ramen_noodle", officialSiteUrl: "https://jp.marugame.com/", description: "讃岐うどんチェーン。季節のうどんフェアを展開。" },
+  { name: "一蘭", slug: "ichiran", category: "ramen_noodle", officialSiteUrl: "https://www.ichiran.com/", description: "1960年、福岡・百道で創業したとんこつラーメン専門店。隣の客を気にせず味に集中できる「味集中カウンター」という独自の一人席スタイルで知られ、海外展開も積極的に行っている。オリジナルの赤い秘伝のタレを使ったラーメンが看板商品。" },
+  { name: "丸亀製麺", slug: "marugame-seimen", category: "ramen_noodle", officialSiteUrl: "https://jp.marugame.com/", description: "2000年11月、兵庫・加古川に1号店が開業した讃岐うどんチェーン。全店舗で製麺機を備え、店内で打ちたてのうどんを提供する「できたて」へのこだわりが特徴。天ぷらを自分で選ぶセルフスタイルで、季節のうどんメニューやうどん粉を使ったユニークなスイーツも展開している。" },
 
-  { name: "CoCo壱番屋", slug: "cocoichi", category: "curry_other", officialSiteUrl: "https://www.ichibanya.co.jp/", description: "カレー専門チェーン。トッピングが自由に選べる。" },
-  { name: "てんや", slug: "tenya", category: "curry_other", officialSiteUrl: "https://www.tenya.co.jp/", description: "天丼・天ぷらの専門チェーン。" },
+  { name: "CoCo壱番屋", slug: "cocoichi", category: "curry_other", officialSiteUrl: "https://www.ichibanya.co.jp/", description: "1978年創業、世界最大級の店舗数を持つカレー専門チェーン。辛さ・ご飯の量・トッピングを自分好みにカスタマイズできるのが最大の特徴で、人気アニメ・キャラクターとのコラボカレーも頻繁に展開している。" },
+  { name: "てんや", slug: "tenya", category: "curry_other", officialSiteUrl: "https://www.tenya.co.jp/", description: "1989年、東京・八重洲地下街に1号店が開業した天丼専門チェーン。注文を受けてから揚げる揚げたての天ぷらが自慢で、独自開発の製法により手頃な価格を実現した「ワンコイン天丼」文化の先駆けとしても知られる。季節の食材を使った限定天丼も定期的に登場する。" },
 ];
 
 type CampaignDef = {
