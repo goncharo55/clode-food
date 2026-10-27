@@ -6,7 +6,7 @@ import { getCampaignById, getCampaignsByChain } from "@/lib/queries";
 import { chainEmoji } from "@/lib/chainVisuals";
 import { CampaignBadges } from "@/components/CampaignBadges";
 import CampaignCard from "@/components/CampaignCard";
-import { formatPeriodJa } from "@/lib/dates";
+import { formatPeriodJa, formatDateJa } from "@/lib/dates";
 import { campaignLinkUrl } from "@/lib/campaignLink";
 import { SITE_URL } from "@/lib/site";
 
@@ -29,10 +29,11 @@ export async function generateMetadata({
   const campaign = await getCampaignById(id);
   if (!campaign) return {};
 
-  const title = `${campaign.title}｜${campaign.chain.name}の期間限定情報`;
+  const title = `${campaign.title}はいつまで？｜${campaign.chain.name}`;
   const description =
-    campaign.description ??
-    `${campaign.chain.name}で${formatPeriodJa(campaign.startDate, campaign.endDate)}開催の期間限定「${campaign.title}」の詳細。`;
+    `${campaign.chain.name}（チェーン店）の期間限定「${campaign.title}」はいつまで？` +
+    `${formatPeriodJa(campaign.startDate, campaign.endDate)}。対象商品・対象店舗の詳細を紹介。` +
+    (campaign.description ? ` ${campaign.description}` : "");
 
   return {
     title,
@@ -63,6 +64,39 @@ export default async function CampaignDetailPage({
     .filter((c) => c.id !== campaign.id)
     .slice(0, 4);
 
+  const untilAnswer = campaign.endDate
+    ? `${formatDateJa(campaign.endDate)}までの予定です（${campaign.chain.name}調べ）。実際の終了日は店舗や在庫状況により前後する場合があるため、最新情報は公式サイトでご確認ください。`
+    : `終了日は明記されておらず、「なくなり次第終了」となる可能性があります。最新情報は公式サイトでご確認ください。`;
+
+  const areaAnswer =
+    campaign.areas.length > 0
+      ? `${campaign.areas.map(({ area }) => area.name).join("・")}エリアの対象店舗で実施中です。`
+      : `全国の${campaign.chain.name}各店で実施中です（一部取り扱いのない店舗がある場合があります）。`;
+
+  const priceAnswer =
+    targetProducts.length > 0 && targetProducts.some((p) => typeof p.price === "number")
+      ? targetProducts
+          .filter((p) => typeof p.price === "number")
+          .map((p) => `${p.name}が${p.price!.toLocaleString()}円`)
+          .join("、") + "です（価格は店舗により異なる場合があります）。"
+      : "価格は公式サイトまたは店頭でご確認ください。";
+
+  const faqItems = [
+    { question: `${campaign.title}はいつまで？`, answer: untilAnswer },
+    { question: "対象店舗はどこ？", answer: areaAnswer },
+    { question: "値段はいくら？", answer: priceAnswer },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -87,6 +121,10 @@ export default async function CampaignDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
 
       <Link
         href={`/chains/${campaign.chain.slug}`}
@@ -97,6 +135,7 @@ export default async function CampaignDetailPage({
       </Link>
 
       <h1 className="mt-2 text-3xl font-bold text-gray-900">{campaign.title}</h1>
+      <p className="mt-1 text-lg font-semibold text-orange-600">はいつまで？</p>
 
       <div className="mt-3">
         <CampaignBadges
@@ -177,6 +216,18 @@ export default async function CampaignDetailPage({
       {campaign.description && (
         <p className="mt-6 leading-relaxed text-gray-700">{campaign.description}</p>
       )}
+
+      <section className="mt-10">
+        <h2 className="text-lg font-bold">よくある質問</h2>
+        <dl className="mt-4 space-y-4">
+          {faqItems.map((item) => (
+            <div key={item.question} className="rounded-xl border border-gray-200 bg-white p-4">
+              <dt className="font-semibold text-gray-900">Q. {item.question}</dt>
+              <dd className="mt-1.5 text-sm leading-relaxed text-gray-600">A. {item.answer}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       {sameChainCampaigns.length > 0 && (
         <section className="mt-10">
