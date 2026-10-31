@@ -11,6 +11,8 @@ import time
 
 from playwright.sync_api import sync_playwright
 
+from fetch.common import OG_IMAGE_JS
+
 BASE_URL = "https://www.kappasushi.jp"
 CAMPAIGN_LIST_URL = f"{BASE_URL}/campaign_list/"
 
@@ -49,7 +51,7 @@ def fetch_new_product_links(limit: int = 5) -> list[dict]:
     return items
 
 
-def fetch_detail_text(url: str) -> str:
+def fetch_detail(url: str) -> dict:
     # 一部ページはバックグラウンド通信が続き networkidle に到達しないため、
     # load待ち+短い固定待機に切り替える
     with sync_playwright() as p:
@@ -58,6 +60,7 @@ def fetch_detail_text(url: str) -> str:
         page.goto(url, timeout=30_000, wait_until="load")
         page.wait_for_timeout(1500)
         text = page.inner_text("body")
+        image_url = page.evaluate(OG_IMAGE_JS)
         browser.close()
     time.sleep(REQUEST_INTERVAL_SECONDS)
-    return text
+    return {"text": text, "image_url": image_url}

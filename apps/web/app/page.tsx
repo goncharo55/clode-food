@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const yearMonth = currentYearMonthJa();
   return {
     title: `${SITE_NAME}｜マック・スタバなどチェーン店の新作・期間限定メニューまとめ【${yearMonth}】`,
-    description: `${yearMonth}の飲食チェーン店の新作・期間限定メニュー・キャンペーンを一覧でまとめて検索。今日は何を食べよう？を30秒で見つけられます。`,
+    description: `マック・スタバ・すき家など、飲食チェーン店の新作・期間限定メニューをまとめてチェック。${yearMonth}の最新情報を一覧で検索できます。`,
   };
 }
 
@@ -37,10 +37,10 @@ export default async function HomePage() {
       <section className="bg-gradient-to-b from-orange-50 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-14 text-center">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
-            今日は何を食べよう？を30秒で。
+            期間限定、見逃してない？
           </h1>
           <p className="mt-3 text-gray-600">
-            飲食チェーン店の期間限定メニュー・キャンペーンをまとめて検索。駅名を入れれば、今その街で体験できる期間限定が一覧でわかります。
+            マック・スタバ・すき家など、飲食チェーン店の期間限定メニューをまとめてチェック。駅名を入れれば、今その街で体験できる期間限定が一覧でわかります。
           </p>
           <div className="mt-6 mx-auto max-w-md">
             <StationSearchForm />

@@ -14,6 +14,8 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
+from fetch.common import extract_detail
+
 BASE_URL = "https://www.yoshinoya.com"
 CAMPAIGN_LIST_URL = f"{BASE_URL}/campaign/"
 
@@ -73,10 +75,7 @@ def fetch_new_product_links(limit: int = 5) -> list[dict]:
     return items
 
 
-def fetch_detail_text(url: str) -> str:
-    """キャンペーン詳細ページ本文をプレーンテキストとして取得する（Claude抽出の入力用）"""
+def fetch_detail(url: str) -> dict:
+    """キャンペーン詳細ページから本文テキストと代表画像URLを取得する（Claude抽出の入力用）"""
     html = _get(url)
-    soup = BeautifulSoup(html, "html.parser")
-    for tag in soup(["script", "style", "nav", "header", "footer"]):
-        tag.decompose()
-    return soup.get_text("\n", strip=True)
+    return extract_detail(html, url)

@@ -10,6 +10,8 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
+from fetch.common import extract_detail
+
 BASE_URL = "https://www.akindo-sushiro.co.jp"
 CAMPAIGN_LIST_URL = f"{BASE_URL}/campaign/"
 
@@ -53,9 +55,6 @@ def fetch_new_product_links(limit: int = 5) -> list[dict]:
     return [candidates[i] for i in ordered_ids[:limit]]
 
 
-def fetch_detail_text(url: str) -> str:
+def fetch_detail(url: str) -> dict:
     html = _get(url)
-    soup = BeautifulSoup(html, "html.parser")
-    for tag in soup(["script", "style", "nav", "header", "footer"]):
-        tag.decompose()
-    return soup.get_text("\n", strip=True)
+    return extract_detail(html, url)

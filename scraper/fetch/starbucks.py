@@ -14,6 +14,8 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
+from fetch.common import extract_detail
+
 BASE_URL = "https://www.starbucks.co.jp"
 FEATURED_CAFE_URL = f"{BASE_URL}/cafe/"
 
@@ -39,13 +41,9 @@ def fetch_new_product_links(limit: int = 5) -> list[dict]:
     return [{"url": final_url, "list_title": None, "url_date": None}][:limit]
 
 
-def fetch_detail_text(url: str) -> str:
-    """商品詳細ページ本文をプレーンテキストとして取得する(Claude抽出の入力用)"""
+def fetch_detail(url: str) -> dict:
+    """商品詳細ページから本文テキストと代表画像URLを取得する(Claude抽出の入力用)"""
     response = _session.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
     response.raise_for_status()
     time.sleep(REQUEST_INTERVAL_SECONDS)
-
-    soup = BeautifulSoup(response.text, "html.parser")
-    for tag in soup(["script", "style", "nav", "header", "footer"]):
-        tag.decompose()
-    return soup.get_text("\n", strip=True)
+    return extract_detail(response.text, url)

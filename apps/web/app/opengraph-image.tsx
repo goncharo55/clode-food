@@ -26,7 +26,7 @@ export default function Image() {
           {SITE_NAME}
         </div>
         <div style={{ display: "flex", fontSize: 34, color: "#52514e", marginTop: 16 }}>
-          今日は何を食べよう？を30秒で。
+          期間限定、見逃してない？
         </div>
       </div>
     ),

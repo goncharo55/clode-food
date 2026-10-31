@@ -85,10 +85,12 @@ def run_for_chain(chain_slug: str, module, limit: int) -> None:
 
         print(f"[fetch] 詳細ページ取得: {url}")
         try:
-            raw_text = module.fetch_detail_text(url)
+            detail = module.fetch_detail(url)
         except Exception as e:  # noqa: BLE001
             print(f"  取得失敗、スキップ: {e}")
             continue
+        raw_text = detail["text"]
+        fetched_image_url = detail.get("image_url")
 
         print("[extract] Claudeで構造化抽出中...")
         try:
@@ -118,7 +120,9 @@ def run_for_chain(chain_slug: str, module, limit: int) -> None:
             "startDate": start_date,
             "endDate": end_date,
             "targetProducts": extracted.get("target_products", []),
-            "imageUrl": extracted.get("image_url"),
+            # HTMLから直接抽出したog:image等を優先する(Claudeはプレーンテキストしか見ておらず
+            # 実在する画像URLを知りようがないため、Claude側の推測はフォールバックに留める)
+            "imageUrl": fetched_image_url or extracted.get("image_url"),
             "sourceUrl": url,
             "extractionMetadata": {
                 "extractedBy": "claude",
