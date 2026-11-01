@@ -30,6 +30,8 @@ _GENERIC_IMAGE_KEYWORDS = (
     "favicon",
     "badge",
     "label",
+    "page_top",
+    "pagetop",
 )
 
 
@@ -87,7 +89,7 @@ def _meta_image_url(soup: BeautifulSoup, base_url: str) -> str | None:
 # header/nav/footer配下とサイト共通アセットを除外し、本文画像を優先、og:image等はフォールバック。
 OG_IMAGE_JS = """
 () => {
-  const GENERIC = ['logo', 'icon', '/common/', '/common_', 'sprite', 'spacer', 'btn_', 'favicon', 'badge', 'label'];
+  const GENERIC = ['logo', 'icon', '/common/', '/common_', 'sprite', 'spacer', 'btn_', 'favicon', 'badge', 'label', 'page_top', 'pagetop'];
   const isGeneric = (u) => {
     const low = (u || '').toLowerCase();
     if (low.endsWith('.svg')) return true;

@@ -32,8 +32,10 @@ from fetch import (
     kappasushi,
     kfc,
     komeda,
+    lotteria,
     mcdonalds,
     misterdonut,
+    royalhost,
     starbucks,
     sukiya,
     sushiro,
@@ -41,7 +43,7 @@ from fetch import (
 )
 from load.ingest import check_exists, submit_pending_campaign
 
-# 対応チェーン一覧。fetchモジュールは fetch_new_product_links / fetch_detail_text を実装すること
+# 対応チェーン一覧。fetchモジュールは fetch_new_product_links / fetch_detail を実装すること
 CHAINS = {
     "mister-donut": misterdonut,
     "mcdonalds": mcdonalds,
@@ -53,6 +55,8 @@ CHAINS = {
     "kfc-japan": kfc,
     "komeda": komeda,
     "kappa-sushi": kappasushi,
+    "lotteria": lotteria,
+    "royal-host": royalhost,
 }
 
 # Claudeが日付を特定できない際に "<UNKNOWN>" 等のプレースホルダーを返すことがあるため、
