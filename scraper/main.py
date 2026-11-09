@@ -29,16 +29,20 @@ load_dotenv()
 from extract.claude_extract import extract_campaign_fields
 from fetch import (
     cocoichi,
+    doutor,
     kappasushi,
     kfc,
     komeda,
     lotteria,
     mcdonalds,
     misterdonut,
+    ootoya,
     royalhost,
     starbucks,
     sukiya,
     sushiro,
+    tullys,
+    yayoiken,
     yoshinoya,
 )
 from load.ingest import check_exists, submit_pending_campaign
@@ -57,6 +61,10 @@ CHAINS = {
     "kappa-sushi": kappasushi,
     "lotteria": lotteria,
     "royal-host": royalhost,
+    "doutor": doutor,
+    "tullys": tullys,
+    "ootoya": ootoya,
+    "yayoiken": yayoiken,
 }
 
 # Claudeが日付を特定できない際に "<UNKNOWN>" 等のプレースホルダーを返すことがあるため、
