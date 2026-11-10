@@ -30,9 +30,11 @@ from extract.claude_extract import extract_campaign_fields
 from fetch import (
     cocoichi,
     doutor,
+    familymart,
     kappasushi,
     kfc,
     komeda,
+    lawson,
     lotteria,
     mcdonalds,
     misterdonut,
@@ -67,6 +69,8 @@ CHAINS = {
     "ootoya": ootoya,
     "yayoiken": yayoiken,
     "seven-eleven": seveneleven,
+    "familymart": familymart,
+    "lawson": lawson,
 }
 
 # Claudeが日付を特定できない際に "<UNKNOWN>" 等のプレースホルダーを返すことがあるため、
