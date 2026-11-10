@@ -23,6 +23,10 @@ const EMOJI_BY_SLUG: Record<string, string> = {
   "marugame-seimen": "🍜",
   lotteria: "🍔",
   "kfc-japan": "🍗",
+  "seven-eleven": "🏪",
+  familymart: "🏪",
+  ministop: "🏪",
+  lawson: "🏪",
 };
 
 export function chainEmoji(slug: string): string {

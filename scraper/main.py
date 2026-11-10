@@ -38,6 +38,7 @@ from fetch import (
     misterdonut,
     ootoya,
     royalhost,
+    seveneleven,
     starbucks,
     sukiya,
     sushiro,
@@ -65,6 +66,7 @@ CHAINS = {
     "tullys": tullys,
     "ootoya": ootoya,
     "yayoiken": yayoiken,
+    "seven-eleven": seveneleven,
 }
 
 # Claudeが日付を特定できない際に "<UNKNOWN>" 等のプレースホルダーを返すことがあるため、

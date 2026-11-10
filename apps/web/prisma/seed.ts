@@ -63,6 +63,11 @@ const chainDefs: ChainDef[] = [
 
   { name: "CoCo壱番屋", slug: "cocoichi", category: "curry_other", officialSiteUrl: "https://www.ichibanya.co.jp/", description: "1978年創業、世界最大級の店舗数を持つカレー専門チェーン。辛さ・ご飯の量・トッピングを自分好みにカスタマイズできるのが最大の特徴で、人気アニメ・キャラクターとのコラボカレーも頻繁に展開している。" },
   { name: "てんや", slug: "tenya", category: "curry_other", officialSiteUrl: "https://www.tenya.co.jp/", description: "1989年、東京・八重洲地下街に1号店が開業した天丼専門チェーン。注文を受けてから揚げる揚げたての天ぷらが自慢で、独自開発の製法により手頃な価格を実現した「ワンコイン天丼」文化の先駆けとしても知られる。季節の食材を使った限定天丼も定期的に登場する。" },
+
+  { name: "セブン-イレブン", slug: "seven-eleven", category: "convenience_store", officialSiteUrl: "https://www.sej.co.jp/", description: "1974年、東京・豊洲に1号店が開業した国内最大手のコンビニエンスストアチェーン。毎週火曜日に新商品が一斉発売されることで知られ、おにぎり・弁当・スイーツ・パンなど幅広いジャンルで話題の新商品を頻繁に展開している。" },
+  { name: "ファミリーマート", slug: "familymart", category: "convenience_store", officialSiteUrl: "https://www.family.co.jp/", description: "1973年に1号店が開業したコンビニエンスストアチェーン。「お母さん食堂」ブランドの惣菜や、著名パティシエ監修のスイーツなどコラボ企画に積極的で、新商品の話題性でも知られる。" },
+  { name: "ミニストップ", slug: "ministop", category: "convenience_store", officialSiteUrl: "https://www.ministop.co.jp/", description: "1980年創業、コンビニとファストフードを融合させた業態が特徴のチェーン。店内で作る「ハロハロ」やソフトクリームなど、その場で食べられるデザート系の限定商品に定評がある。" },
+  { name: "ローソン", slug: "lawson", category: "convenience_store", officialSiteUrl: "https://www.lawson.co.jp/", description: "1975年に1号店が開業したコンビニエンスストアチェーン。「ウチカフェ」ブランドのスイーツが看板で、プチシリーズなど低価格帯のスイーツからこだわりの季節限定デザートまで新商品展開が活発。" },
 ];
 
 type CampaignDef = {

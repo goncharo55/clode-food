@@ -9,7 +9,8 @@ export type ChainCategory =
   | "gyudon_teishoku"
   | "family_restaurant"
   | "ramen_noodle"
-  | "curry_other";
+  | "curry_other"
+  | "convenience_store";
 
 export const CATEGORY_ORDER: ChainCategory[] = [
   "burger_fastfood",
@@ -19,6 +20,7 @@ export const CATEGORY_ORDER: ChainCategory[] = [
   "family_restaurant",
   "ramen_noodle",
   "curry_other",
+  "convenience_store",
 ];
 
 export const CATEGORY_VISUALS: Record<
@@ -72,6 +74,13 @@ export const CATEGORY_VISUALS: Record<
     colorLight: "#4a3aa7",
     colorDark: "#9085e9",
     image: "/images/placeholders/curry_other.svg",
+    textOnFill: "white",
+  },
+  convenience_store: {
+    label: "コンビニ新商品",
+    colorLight: "#e34948",
+    colorDark: "#e66767",
+    image: "/images/placeholders/convenience_store.svg",
     textOnFill: "white",
   },
 };
