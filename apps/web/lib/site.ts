@@ -1,4 +1,4 @@
-export const SITE_NAME = "期間限定カレンダー";
+export const SITE_NAME = "まんぷくカレンダー";
 export const SITE_DESCRIPTION =
   "マック・スタバ・すき家など、飲食チェーン店の期間限定メニュー・キャンペーン・コラボ情報をまとめてチェックできるサイトです。";
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
