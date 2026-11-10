@@ -26,7 +26,7 @@ export default function Image() {
           {SITE_NAME}
         </div>
         <div style={{ display: "flex", fontSize: 34, color: "#52514e", marginTop: 16 }}>
-          期間限定、見逃してない？
+          期間限定、見逃していませんか？
         </div>
       </div>
     ),

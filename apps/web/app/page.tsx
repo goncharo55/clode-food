@@ -37,7 +37,7 @@ export default async function HomePage() {
       <section className="bg-gradient-to-b from-orange-50 to-transparent">
         <div className="mx-auto max-w-5xl px-4 py-14 text-center">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
-            期間限定、見逃してない？
+            期間限定、見逃していませんか？
           </h1>
           <p className="mt-3 text-gray-600">
             マック・スタバ・すき家など、飲食チェーン店の期間限定メニューをまとめてチェック。駅名を入れれば、今その街で体験できる期間限定が一覧でわかります。
