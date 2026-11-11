@@ -73,6 +73,13 @@ CHAINS = {
     "lawson": lawson,
 }
 
+# コンビニの「週替わり新商品まとめ」はコード側(fetch_detail)で機械的に商品一覧を
+# 組み立てた確定情報で、Claudeが判断しているのは「本当にキャンペーン情報か」という
+# 曖昧さではなく単なる整形のみ。そのためこの3チェーンに限り、Claudeの confidence が
+# null/低くても常に高信頼として扱い、毎週の手動レビューを不要にする
+# (他チェーンの単一記事抽出とは性質が異なるための意図的な特例)
+ALWAYS_TRUSTED_CHAINS = {"seven-eleven", "familymart", "lawson"}
+
 # Claudeが日付を特定できない際に "<UNKNOWN>" 等のプレースホルダーを返すことがあるため、
 # YYYY-MM-DD形式かどうかを検証してから送信する
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -131,6 +138,10 @@ def run_for_chain(chain_slug: str, module, limit: int) -> None:
         )
         end_date = valid_date_or_none(extracted.get("end_date"))
 
+        confidence = extracted.get("confidence")
+        if chain_slug in ALWAYS_TRUSTED_CHAINS:
+            confidence = 1.0
+
         payload = {
             "chainSlug": chain_slug,
             "title": extracted.get("title"),
@@ -144,7 +155,7 @@ def run_for_chain(chain_slug: str, module, limit: int) -> None:
             "sourceUrl": url,
             "extractionMetadata": {
                 "extractedBy": "claude",
-                "confidence": extracted.get("confidence"),
+                "confidence": confidence,
                 "notes": extracted.get("notes"),
                 "listTitle": item.get("list_title"),
             },
