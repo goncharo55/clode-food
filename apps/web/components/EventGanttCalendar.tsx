@@ -4,7 +4,6 @@ import { CATEGORY_VISUALS, categoryVisual, CATEGORY_ORDER } from "@/lib/category
 import { chainEmoji } from "@/lib/chainVisuals";
 import type { CampaignWithRelations } from "@/lib/queries";
 
-const LABEL_WIDTH = 200;
 const ROW_HEIGHT = 34;
 const BAR_HEIGHT = 20;
 
@@ -62,7 +61,8 @@ export default function EventGanttCalendar({
 
   const days = Array.from({ length: totalDays }, (_, i) => addDays(rangeStart, i));
   const usedCategories = new Set(rows.map((r) => r.chain.category));
-  const gridTemplateColumns = `${LABEL_WIDTH}px repeat(${totalDays}, ${DAY_WIDTH}px)`;
+  // ラベル列の幅はCSS変数化し、スマホでは狭く・画面が広がるほど広げる(日付バーの表示領域を確保するため)
+  const gridTemplateColumns = `var(--gantt-label-width) repeat(${totalDays}, ${DAY_WIDTH}px)`;
 
   return (
     <div>
@@ -89,7 +89,7 @@ export default function EventGanttCalendar({
         </span>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white [--gantt-label-width:104px] sm:[--gantt-label-width:200px]">
         <div
           className="grid"
           style={{ gridTemplateColumns, gridAutoRows: `${ROW_HEIGHT}px`, width: "max-content", minWidth: "100%" }}
@@ -120,7 +120,7 @@ export default function EventGanttCalendar({
             className="sticky left-0 z-10 flex items-end bg-white/95 pb-1 pl-2 text-[11px] font-semibold text-gray-400 backdrop-blur"
             style={{ gridColumn: "1 / 2", gridRow: "1 / 2" }}
           >
-            チェーン・イベント
+            イベント
           </div>
           {days.map((d, i) => (
             <div
