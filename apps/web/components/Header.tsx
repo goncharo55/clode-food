@@ -12,17 +12,32 @@ export default function Header() {
         <div className="flex-1 min-w-[200px] max-w-sm">
           <StationSearchForm compact />
         </div>
-        <nav className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-medium text-gray-600">
-          <Link href="/calendar" className="whitespace-nowrap hover:text-orange-600">
+        <nav className="flex flex-wrap items-center gap-2 text-sm font-medium text-gray-600">
+          <Link
+            href="/calendar"
+            className="whitespace-nowrap rounded-full bg-gray-100 px-3 py-1.5 transition hover:bg-orange-100 hover:text-orange-600"
+          >
             カレンダー
           </Link>
-          <Link href="/areas" className="whitespace-nowrap hover:text-orange-600">
+          <Link
+            href="/areas"
+            className="whitespace-nowrap rounded-full bg-gray-100 px-3 py-1.5 transition hover:bg-orange-100 hover:text-orange-600"
+          >
             エリアから探す
           </Link>
-          <Link href="/chains" className="whitespace-nowrap hover:text-orange-600">
+          {/* スマホ幅では「カレンダー/エリアから探す」と「チェーン一覧/今週のまとめ」を
+              2件ずつの行に分ける(sm以上では効果を消し、通常通り1行に収める) */}
+          <span className="basis-full sm:hidden" aria-hidden />
+          <Link
+            href="/chains"
+            className="whitespace-nowrap rounded-full bg-gray-100 px-3 py-1.5 transition hover:bg-orange-100 hover:text-orange-600"
+          >
             チェーン一覧
           </Link>
-          <Link href="/digest" className="whitespace-nowrap hover:text-orange-600">
+          <Link
+            href="/digest"
+            className="whitespace-nowrap rounded-full bg-gray-100 px-3 py-1.5 transition hover:bg-orange-100 hover:text-orange-600"
+          >
             今週のまとめ
           </Link>
         </nav>
