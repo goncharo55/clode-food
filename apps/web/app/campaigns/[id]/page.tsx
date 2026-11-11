@@ -97,6 +97,34 @@ export default async function CampaignDetailPage({
     })),
   };
 
+  // Eventは本来「決まった場所で行われる催し」向けの型でlocationが必須級のため、
+  // 店舗を問わない期間限定商品とは相性が悪い。価格がある商品にはProductの方が適切
+  // (ただしコンビニの週替わりまとめのように商品点数が多いページは「1商品」として
+  // 表現するのが不正確になるため対象外にする)
+  const pricedProducts = targetProducts.filter((p) => typeof p.price === "number");
+  const productJsonLd =
+    pricedProducts.length > 0 && pricedProducts.length <= 5
+      ? {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: campaign.title,
+          description: campaign.description ?? campaign.title,
+          image: campaign.imageUrl ? [campaign.imageUrl] : undefined,
+          brand: { "@type": "Brand", name: campaign.chain.name },
+          offers: pricedProducts.map((p) => ({
+            "@type": "Offer",
+            name: p.name,
+            price: p.price,
+            priceCurrency: "JPY",
+            availability: "https://schema.org/LimitedAvailability",
+            ...(campaign.endDate
+              ? { priceValidUntil: campaign.endDate.toISOString().slice(0, 10) }
+              : {}),
+            url: `${SITE_URL}/campaigns/${campaign.id}`,
+          })),
+        }
+      : null;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -125,6 +153,12 @@ export default async function CampaignDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+      {productJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        />
+      )}
 
       <Link
         href={`/chains/${campaign.chain.slug}`}
