@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getCurrentCampaigns, parseSort, type CampaignWithRelations } from "@/lib/queries";
-import { dateKey, formatDateWithWeekdayJa, currentYearMonthJa } from "@/lib/dates";
-import CampaignCard from "@/components/CampaignCard";
+import { Suspense } from "react";
+import { getCurrentCampaigns } from "@/lib/queries";
+import { currentYearMonthJa } from "@/lib/dates";
 import SortTabs from "@/components/SortTabs";
+import SortTabsClient from "@/components/SortTabsClient";
+import CalendarCampaignSections, { CalendarCampaignSectionsView } from "@/components/CalendarCampaignSections";
 import EventGanttCalendar from "@/components/EventGanttCalendar";
 
 export const revalidate = 3600;
@@ -16,24 +18,11 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-function groupByStartDate(campaigns: CampaignWithRelations[]) {
-  const groups = new Map<string, CampaignWithRelations[]>();
-  for (const c of campaigns) {
-    const key = dateKey(c.startDate);
-    const list = groups.get(key) ?? [];
-    list.push(c);
-    groups.set(key, list);
-  }
-  return [...groups.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1));
-}
-
-export default async function CalendarPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ sort?: string }>;
-}) {
-  const sort = parseSort((await searchParams).sort);
-  const campaigns = await getCurrentCampaigns(sort);
+export default async function CalendarPage() {
+  // 並び替えはクライアント側(CalendarCampaignSections)で行う。ここでsearchParamsを
+  // 読むとページ全体が動的レンダリング扱いになり、ISRキャッシュが効かなくなるため、
+  // 並び替えに関わらず同じ固定順で1回だけ取得する
+  const campaigns = await getCurrentCampaigns();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -54,34 +43,23 @@ export default async function CalendarPage({
       <div className="mt-10">
         <h2 className="text-lg font-bold">詳細一覧</h2>
         <div className="mt-3">
-          <SortTabs basePath="/calendar" current={sort} />
+          <Suspense fallback={<SortTabs basePath="/calendar" current="ending" />}>
+            <SortTabsClient basePath="/calendar" />
+          </Suspense>
         </div>
       </div>
 
-      {campaigns.length === 0 ? (
-        <p className="mt-8 text-gray-500">現在表示できるキャンペーンがありません。</p>
-      ) : sort === "starting" ? (
-        <div className="mt-8 space-y-8">
-          {groupByStartDate(campaigns).map(([key, items]) => (
-            <section key={key}>
-              <h2 className="text-sm font-bold text-gray-500 border-b border-gray-200 pb-2">
-                {formatDateWithWeekdayJa(items[0].startDate)} 開始
-              </h2>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {items.map((campaign) => (
-                  <CampaignCard key={campaign.id} campaign={campaign} />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-      ) : (
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {campaigns.map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
-          ))}
-        </div>
-      )}
+      <Suspense
+        fallback={
+          <CalendarCampaignSectionsView
+            campaigns={campaigns}
+            sort="ending"
+            emptyMessage="現在表示できるキャンペーンがありません。"
+          />
+        }
+      >
+        <CalendarCampaignSections campaigns={campaigns} emptyMessage="現在表示できるキャンペーンがありません。" />
+      </Suspense>
     </div>
   );
 }

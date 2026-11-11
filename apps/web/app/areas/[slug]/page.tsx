@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  getAllAreas,
-  getAreaBySlug,
-  getCampaignsByArea,
-  parseSort,
-  type CampaignWithRelations,
-} from "@/lib/queries";
-import { chainEmoji } from "@/lib/chainVisuals";
-import { googleMapsSearchUrl } from "@/lib/googleMaps";
-import CampaignCard from "@/components/CampaignCard";
+import { Suspense } from "react";
+import { getAllAreas, getAreaBySlug, getCampaignsByArea } from "@/lib/queries";
 import SortTabs from "@/components/SortTabs";
+import SortTabsClient from "@/components/SortTabsClient";
+import AreaCampaignGroups, { AreaCampaignGroupsView } from "@/components/AreaCampaignGroups";
+import { groupByChain } from "@/lib/campaignGrouping";
 
 export const revalidate = 3600;
 
@@ -34,31 +29,20 @@ export async function generateMetadata({
   };
 }
 
-function groupByChain(campaigns: CampaignWithRelations[]) {
-  const groups = new Map<string, CampaignWithRelations[]>();
-  for (const c of campaigns) {
-    const key = c.chain.id;
-    const list = groups.get(key) ?? [];
-    list.push(c);
-    groups.set(key, list);
-  }
-  return [...groups.values()].sort((a, b) => a[0].chain.name.localeCompare(b[0].chain.name, "ja"));
-}
-
 export default async function AreaDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ sort?: string }>;
 }) {
   const { slug } = await params;
   const area = await getAreaBySlug(slug);
   if (!area) notFound();
 
-  const sort = parseSort((await searchParams).sort);
-  const campaigns = await getCampaignsByArea(area.id, sort);
-  const groups = groupByChain(campaigns);
+  // 並び替えはクライアント側(AreaCampaignGroups)で行う。ここでsearchParamsを
+  // 読むとページ全体が動的レンダリング扱いになり、ISRキャッシュが効かなくなるため、
+  // 並び替えに関わらず同じ固定順で1回だけ取得する
+  const campaigns = await getCampaignsByArea(area.id);
+  const chainCount = new Set(campaigns.map((c) => c.chain.id)).size;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -70,43 +54,28 @@ export default async function AreaDetailPage({
 
       <div className="mt-6 flex items-center justify-between flex-wrap gap-3">
         <span className="text-sm font-semibold text-gray-500">
-          {groups.length}チェーン・{campaigns.length}件のキャンペーン
+          {chainCount}チェーン・{campaigns.length}件のキャンペーン
         </span>
-        <SortTabs basePath={`/areas/${area.slug}`} current={sort} />
+        <Suspense fallback={<SortTabs basePath={`/areas/${area.slug}`} current="ending" />}>
+          <SortTabsClient basePath={`/areas/${area.slug}`} />
+        </Suspense>
       </div>
 
-      {groups.length === 0 ? (
-        <p className="mt-8 text-gray-500">
-          現在、{area.name}に該当する期間限定情報はありません。全国区のキャンペーンが追加され次第表示されます。
-        </p>
-      ) : (
-        <div className="mt-8 space-y-8">
-          {groups.map((items) => (
-            <section key={items[0].chain.id}>
-              <h2 className="flex items-center gap-2 text-lg font-bold border-b border-gray-200 pb-2">
-                <span className="text-2xl">{chainEmoji(items[0].chain.slug)}</span>
-                {items[0].chain.name}
-                <span className="text-sm font-normal text-gray-500">
-                  {items.length}件開催中
-                </span>
-                <a
-                  href={googleMapsSearchUrl(`${items[0].chain.name} ${area.name}駅`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ml-auto text-xs font-normal text-gray-400 hover:text-orange-600"
-                >
-                  📍 近くの店舗をGoogleマップで探す ↗
-                </a>
-              </h2>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {items.map((campaign) => (
-                  <CampaignCard key={campaign.id} campaign={campaign} />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-      )}
+      <Suspense
+        fallback={
+          <AreaCampaignGroupsView
+            groups={groupByChain(campaigns)}
+            areaName={area.name}
+            emptyMessage={`現在、${area.name}に該当する期間限定情報はありません。全国区のキャンペーンが追加され次第表示されます。`}
+          />
+        }
+      >
+        <AreaCampaignGroups
+          campaigns={campaigns}
+          areaName={area.name}
+          emptyMessage={`現在、${area.name}に該当する期間限定情報はありません。全国区のキャンペーンが追加され次第表示されます。`}
+        />
+      </Suspense>
     </div>
   );
 }

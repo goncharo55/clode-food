@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { today } from "@/lib/dates";
+import { applyCampaignSort, parseSort, type CampaignSort } from "@/lib/campaignSort";
 import type { Prisma } from "@prisma/client";
+
+export { parseSort };
+export type { CampaignSort };
 
 // 終了日未設定(なくなり次第終了)のキャンペーンは、いつまでも「開催中」として残り続けてしまう。
 // 開始からこの日数を超えたら一覧から外す（終了日が明記されているものは対象外、通常通りendDateで判定）
@@ -19,15 +23,6 @@ function currentOrUpcomingFilter(): Prisma.CampaignWhereInput {
   };
 }
 
-export type CampaignSort = "ending" | "starting" | "popular" | "new";
-
-const VALID_SORTS: CampaignSort[] = ["ending", "starting", "popular", "new"];
-
-export function parseSort(value: string | string[] | undefined): CampaignSort {
-  const v = Array.isArray(value) ? value[0] : value;
-  return VALID_SORTS.includes(v as CampaignSort) ? (v as CampaignSort) : "ending";
-}
-
 function orderByForSort(sort: CampaignSort): Prisma.CampaignOrderByWithRelationInput[] {
   switch (sort) {
     case "starting":
@@ -43,32 +38,11 @@ function orderByForSort(sort: CampaignSort): Prisma.CampaignOrderByWithRelationI
   }
 }
 
-function sortCampaignsForEnding<T extends { endDate: Date | null }>(campaigns: T[]): T[] {
-  return [...campaigns].sort((a, b) => {
-    if (a.endDate === null && b.endDate === null) return 0;
-    if (a.endDate === null) return 1;
-    if (b.endDate === null) return -1;
-    return a.endDate.getTime() - b.endDate.getTime();
-  });
-}
-
-// 開始日の新しさだけで並べると、開始が古いまま長期間続いているキャンペーンが
-// 上位を占め続けてしまう。「注目」フラグを優先しつつ、その中では今日に近い開始日を優先する。
-function sortCampaignsByRelevance<T extends { startDate: Date; featured: boolean }>(campaigns: T[]): T[] {
-  const now = today().getTime();
-  return [...campaigns].sort((a, b) => {
-    if (a.featured !== b.featured) return a.featured ? -1 : 1;
-    return Math.abs(a.startDate.getTime() - now) - Math.abs(b.startDate.getTime() - now);
-  });
-}
-
-function applyPostSort<T extends { endDate: Date | null; startDate: Date; featured: boolean }>(
+function applyPostSort<T extends { endDate: Date | null; startDate: Date; featured: boolean; createdAt: Date }>(
   campaigns: T[],
   sort: CampaignSort,
 ): T[] {
-  if (sort === "ending") return sortCampaignsForEnding(campaigns);
-  if (sort === "popular") return sortCampaignsByRelevance(campaigns);
-  return campaigns;
+  return applyCampaignSort(campaigns, sort, today().getTime());
 }
 
 export const campaignListInclude = {
@@ -172,7 +146,7 @@ export async function getEndingSoonCampaigns(limit = 8) {
     include: campaignListInclude,
     take: limit * 3,
   });
-  return sortCampaignsForEnding(campaigns)
+  return applyCampaignSort(campaigns, "ending")
     .filter((c) => c.endDate !== null)
     .slice(0, limit);
 }

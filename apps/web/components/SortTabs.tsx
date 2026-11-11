@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { CampaignSort } from "@/lib/queries";
+import type { CampaignSort } from "@/lib/campaignSort";
 
 const SORT_LABELS: Record<CampaignSort, string> = {
   starting: "今日開始",

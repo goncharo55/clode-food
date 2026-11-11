@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllChains, getChainBySlug, getCampaignsByChain, parseSort } from "@/lib/queries";
+import { Suspense } from "react";
+import { getAllChains, getChainBySlug, getCampaignsByChain } from "@/lib/queries";
 import { chainEmoji } from "@/lib/chainVisuals";
 import { currentYearMonthJa } from "@/lib/dates";
-import CampaignCard from "@/components/CampaignCard";
 import SortTabs from "@/components/SortTabs";
+import SortTabsClient from "@/components/SortTabsClient";
+import ChainCampaignGrid, { ChainCampaignGridView } from "@/components/ChainCampaignGrid";
 
 export const revalidate = 3600;
 
@@ -33,17 +35,17 @@ export async function generateMetadata({
 
 export default async function ChainDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ sort?: string }>;
 }) {
   const { slug } = await params;
   const chain = await getChainBySlug(slug);
   if (!chain) notFound();
 
-  const sort = parseSort((await searchParams).sort);
-  const campaigns = await getCampaignsByChain(chain.id, sort);
+  // 並び替えはクライアント側(ChainCampaignGrid)で行う。ここでsearchParamsを
+  // 読むとページ全体が動的レンダリング扱いになり、ISRキャッシュが効かなくなるため、
+  // 並び替えに関わらず同じ固定順で1回だけ取得する
+  const campaigns = await getCampaignsByChain(chain.id);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -65,18 +67,18 @@ export default async function ChainDetailPage({
 
       <div className="mt-8 flex items-center justify-between flex-wrap gap-3">
         <h2 className="text-lg font-bold">現在開催中・開催予定のキャンペーン</h2>
-        <SortTabs basePath={`/chains/${chain.slug}`} current={sort} />
+        <Suspense fallback={<SortTabs basePath={`/chains/${chain.slug}`} current="ending" />}>
+          <SortTabsClient basePath={`/chains/${chain.slug}`} />
+        </Suspense>
       </div>
 
-      {campaigns.length === 0 ? (
-        <p className="mt-6 text-gray-500">現在開催中のキャンペーン情報はありません。</p>
-      ) : (
-        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {campaigns.map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
-          ))}
-        </div>
-      )}
+      <Suspense
+        fallback={
+          <ChainCampaignGridView campaigns={campaigns} emptyMessage="現在開催中のキャンペーン情報はありません。" />
+        }
+      >
+        <ChainCampaignGrid campaigns={campaigns} emptyMessage="現在開催中のキャンペーン情報はありません。" />
+      </Suspense>
     </div>
   );
 }
