@@ -40,6 +40,16 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mt-6 space-y-2">
+        <h2 className="text-lg font-bold">「食べたい/食べたよ」ボタンについて</h2>
+        <p className="text-gray-700">
+          本サイトの「食べたい/食べたよ」ボタンのご利用にあたり、重複投票および不正利用を防ぐため、
+          ブラウザに保存されるランダムな識別子、および投稿時点のIPアドレスを一方向のハッシュ化処理をした情報を一時的に利用します。
+          ハッシュ化されたIP情報は一定期間後に削除され、個人を特定する目的では利用しません。
+          また、不正なアクセス（ボット等）を判別するためCloudflare Turnstileを利用しており、その処理に伴い一部情報がCloudflare社に送信されます。
+        </p>
+      </section>
+
+      <section className="mt-6 space-y-2">
         <h2 className="text-lg font-bold">お問い合わせフォームについて</h2>
         <p className="text-gray-700">
           お問い合わせの際にご提供いただいたメールアドレス等の情報は、お問い合わせへの対応以外の目的では利用しません。

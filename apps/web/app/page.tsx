@@ -10,9 +10,11 @@ import CampaignCard from "@/components/CampaignCard";
 import StationSearchForm from "@/components/StationSearchForm";
 import AdSlot from "@/components/AdSlot";
 import EventGanttCalendar from "@/components/EventGanttCalendar";
+import RankingList from "@/components/RankingList";
 import { chainEmoji } from "@/lib/chainVisuals";
 import { currentYearMonthJa } from "@/lib/dates";
 import { SITE_NAME } from "@/lib/site";
+import { getRanking } from "@/lib/reactions";
 
 export const revalidate = 1800;
 
@@ -25,11 +27,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [endingSoon, newOrUpcoming, featured, chains] = await Promise.all([
+  const [endingSoon, newOrUpcoming, featured, chains, wantToEatRanking] = await Promise.all([
     getEndingSoonCampaigns(8),
     getNewOrUpcomingCampaigns(8),
     getCurrentCampaigns("popular"),
     getAllChains(),
+    getRanking("want_to_eat", 3),
   ]);
 
   return (
@@ -84,6 +87,20 @@ export default async function HomePage() {
             </div>
           )}
         </section>
+
+        {wantToEatRanking.length > 0 && (
+          <section className="mt-10 rounded-xl border border-orange-100 bg-orange-50/50 p-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold">🙋 今週の「食べたい」ランキング</h2>
+              <Link href="/ranking" className="text-sm text-orange-600 hover:underline">
+                ランキングを見る →
+              </Link>
+            </div>
+            <div className="mt-3">
+              <RankingList kind="want_to_eat" entries={wantToEatRanking} compact />
+            </div>
+          </section>
+        )}
 
         <section className="mt-10">
           <div className="flex items-center justify-between">

@@ -17,6 +17,11 @@ enum CampaignStatus {
   archived
 }
 
+enum ReactionType {
+  want_to_eat
+  have_eaten
+}
+
 model Chain {
   id              String     @id @default(cuid())
   name            String
@@ -46,6 +51,8 @@ model Campaign {
   featured           Boolean         @default(false)
   extractionMetadata Json?
   areas              CampaignArea[]
+  reactionCounts     CampaignReactionCount[]
+  reactionVotes      CampaignReactionVote[]
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt
 
@@ -53,6 +60,31 @@ model Campaign {
   @@index([chainId])
   @@index([startDate])
   @@index([endDate])
+}
+
+model CampaignReactionCount {
+  campaignId   String
+  campaign     Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  reactionType ReactionType
+  count        Int          @default(0)
+  updatedAt    DateTime     @updatedAt
+
+  @@id([campaignId, reactionType])
+  @@index([reactionType, count])
+}
+
+model CampaignReactionVote {
+  id           String       @id @default(cuid())
+  campaignId   String
+  campaign     Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  reactionType ReactionType
+  clientToken  String
+  ipHash       String?
+  createdAt    DateTime     @default(now())
+
+  @@unique([campaignId, reactionType, clientToken])
+  @@index([campaignId, reactionType, ipHash, createdAt])
+  @@index([createdAt])
 }
 
 model Area {

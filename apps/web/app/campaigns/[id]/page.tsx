@@ -6,6 +6,7 @@ import { getCampaignById, getCampaignsByChain } from "@/lib/queries";
 import { chainEmoji } from "@/lib/chainVisuals";
 import { CampaignBadges } from "@/components/CampaignBadges";
 import CampaignCard from "@/components/CampaignCard";
+import ReactionButtons from "@/components/ReactionButtons";
 import { formatPeriodJa, formatDateJa } from "@/lib/dates";
 import { campaignLinkUrl } from "@/lib/campaignLink";
 import { SITE_URL } from "@/lib/site";
@@ -178,6 +179,8 @@ export default async function CampaignDetailPage({
           featured={campaign.featured}
         />
       </div>
+
+      <ReactionButtons campaignId={campaign.id} />
 
       {campaign.imageUrl && (
         // eslint-disable-next-line @next/next/no-img-element

@@ -25,6 +25,9 @@ export default function Footer() {
           <Link href="/digest" className="hover:text-orange-600">
             まとめ記事
           </Link>
+          <Link href="/ranking" className="hover:text-orange-600">
+            みんなのランキング
+          </Link>
         </nav>
         <p>&copy; {new Date().getFullYear()} {SITE_NAME}</p>
       </div>
