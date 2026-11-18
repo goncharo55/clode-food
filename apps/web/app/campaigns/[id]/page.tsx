@@ -248,6 +248,22 @@ export default async function CampaignDetailPage({
             </a>
           </dd>
         </div>
+        <div className="flex flex-col gap-1 p-4 sm:flex-row sm:gap-4">
+          <dt className="w-28 shrink-0 text-sm font-semibold text-gray-500">デリバリー</dt>
+          <dd>
+            <a
+              href="https://www.ubereats.com/jp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-orange-600 hover:underline"
+            >
+              Uber Eatsで注文する ↗
+            </a>
+            <p className="mt-1 text-xs text-gray-400">
+              対応エリア・店舗はUber Eatsアプリ・サイトでご確認ください。
+            </p>
+          </dd>
+        </div>
       </dl>
 
       {campaign.description && (
