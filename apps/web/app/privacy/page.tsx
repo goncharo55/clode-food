@@ -46,6 +46,16 @@ export default function PrivacyPage() {
           ブラウザに保存されるランダムな識別子、および投稿時点のIPアドレスを一方向のハッシュ化処理をした情報を一時的に利用します。
           ハッシュ化されたIP情報は一定期間後に削除され、個人を特定する目的では利用しません。
           また、不正なアクセス（ボット等）を判別するためCloudflare Turnstileを利用しており、その処理に伴い一部情報がCloudflare社に送信されます。
+          詳細は
+          <a
+            href="https://www.cloudflare.com/turnstile-privacy-policy/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-orange-600 hover:underline"
+          >
+            Cloudflare Turnstile Privacy Addendum
+          </a>
+          をご覧ください。
         </p>
       </section>
 
