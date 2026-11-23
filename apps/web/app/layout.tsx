@@ -29,6 +29,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ja_JP",
   },
+  alternates: {
+    canonical: "./",
+  },
   verification: {
     google: "mOCouAXwG83dsYCgsqvVbzMhTcGzz-t3ZryLnoVI0Wo",
   },

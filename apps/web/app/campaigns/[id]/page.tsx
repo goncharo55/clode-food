@@ -126,6 +126,26 @@ export default async function CampaignDetailPage({
         }
       : null;
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "ホーム", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: campaign.chain.name,
+        item: `${SITE_URL}/chains/${campaign.chain.slug}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: campaign.title,
+        item: `${SITE_URL}/campaigns/${campaign.id}`,
+      },
+    ],
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -148,6 +168,10 @@ export default async function CampaignDetailPage({
     <div className="mx-auto max-w-3xl px-4 py-10">
       <script
         type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <script
@@ -161,9 +185,19 @@ export default async function CampaignDetailPage({
         />
       )}
 
+      <nav aria-label="パンくずリスト" className="flex flex-wrap items-center gap-1 text-xs text-gray-400">
+        <Link href="/" className="hover:text-orange-600">ホーム</Link>
+        <span>/</span>
+        <Link href={`/chains/${campaign.chain.slug}`} className="hover:text-orange-600">
+          {campaign.chain.name}
+        </Link>
+        <span>/</span>
+        <span className="text-gray-500">{campaign.title}</span>
+      </nav>
+
       <Link
         href={`/chains/${campaign.chain.slug}`}
-        className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-orange-600"
+        className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-orange-600"
       >
         <span className="text-lg">{chainEmoji(campaign.chain.slug)}</span>
         {campaign.chain.name}
@@ -171,6 +205,7 @@ export default async function CampaignDetailPage({
 
       <h1 className="mt-2 text-3xl font-bold text-gray-900">{campaign.title}</h1>
       <p className="mt-1 text-lg font-semibold text-orange-600">はいつまで？</p>
+      <p className="mt-1 text-xs text-gray-400">情報更新日: {formatDateJa(campaign.updatedAt)}</p>
 
       <div className="mt-3">
         <CampaignBadges
