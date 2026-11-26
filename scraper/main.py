@@ -29,6 +29,7 @@ load_dotenv()
 from extract.claude_extract import extract_campaign_fields
 from fetch import (
     cocoichi,
+    dennys,
     doutor,
     familymart,
     kappasushi,
@@ -36,6 +37,7 @@ from fetch import (
     komeda,
     lawson,
     lotteria,
+    matsuya,
     mcdonalds,
     misterdonut,
     ootoya,
@@ -44,6 +46,7 @@ from fetch import (
     starbucks,
     sukiya,
     sushiro,
+    tenya,
     tullys,
     yayoiken,
     yoshinoya,
@@ -71,6 +74,9 @@ CHAINS = {
     "seven-eleven": seveneleven,
     "familymart": familymart,
     "lawson": lawson,
+    "matsuya": matsuya,
+    "dennys": dennys,
+    "tenya": tenya,
 }
 
 # コンビニの「週替わり新商品まとめ」はコード側(fetch_detail)で機械的に商品一覧を
