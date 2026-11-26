@@ -27,7 +27,7 @@ export async function generateMetadata({
   const yearMonth = currentYearMonthJa();
   return {
     title: `${chain.name} 新作・期間限定メニューまとめ【${yearMonth}】`,
-    description: `${chain.name}の新作・期間限定メニューやキャンペーンを${yearMonth}最新版でまとめて紹介。${
+    description: `${chain.name}の期間限定メニュー・新作メニューを${yearMonth}最新版でまとめて紹介。メニューごとの期間限定情報(いつまで・価格)もチェックできます。${
       chain.description ?? ""
     }`,
   };
